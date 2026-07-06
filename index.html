@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -35,15 +35,20 @@
     <div class="nav-inner">
         <a href="#hero" class="nav-logo">Ernest<span class="logo-dot">.</span></a>
         <ul class="nav-links">
-            <li><a href="#about"    class="nav-link">À propos</a></li>
-            <li><a href="#skills"   class="nav-link">Compétences</a></li>
-            <li><a href="#projects" class="nav-link">Projets</a></li>
-            <li><a href="#contact"  class="nav-link">Contact</a></li>
+            <li><a href="#about"    class="nav-link" data-fr="À propos"      data-en="About"><span data-key="nav-about">À propos</span></a></li>
+            <li><a href="#skills"   class="nav-link" data-fr="Compétences"   data-en="Skills"><span data-key="nav-skills">Compétences</span></a></li>
+            <li><a href="#projects" class="nav-link" data-fr="Projets"       data-en="Projects"><span data-key="nav-projects">Projets</span></a></li>
+            <li><a href="#contact"  class="nav-link" data-fr="Contact"       data-en="Contact"><span data-key="nav-contact">Contact</span></a></li>
         </ul>
         <a href="mailto:mbargaernest80@gmail.com" class="nav-cta">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            Contact
+            <span data-fr="Contact" data-en="Contact">Contact</span>
         </a>
+        <!-- Bouton traduction -->
+        <button class="btn-lang" id="langToggle" aria-label="Traduire">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            <span id="langLabel">EN</span>
+        </button>
         <button class="nav-burger" id="navBurger" aria-label="Menu">
             <span></span><span></span>
         </button>
@@ -74,7 +79,7 @@
         <div class="hero-body">
             <div class="hero-label h-fade" style="--i:0">
                 <span class="pulse-dot"></span>
-                Disponible pour des projets &amp; stages
+                <span data-key="hero-badge">Disponible pour des projets &amp; stages</span>
             </div>
 
             <h1 class="hero-h1">
@@ -87,37 +92,31 @@
                 </span>
             </h1>
 
-            <p class="hero-p h-fade" style="--i:2">
-                Étudiant en <strong>Cybersécurité B2</strong> à KEYCE Academy Yaoundé.
-                Full-Stack · DevOps · Réseaux · Offensif — je construis des solutions qui tiennent la route.
-            </p>
+            <p class="hero-p h-fade" style="--i:2"><span data-key="hero-p">Étudiant en <strong>Cybersécurité B2</strong> à KEYCE Academy Yaoundé. Full-Stack · DevOps · Réseaux · Offensif : je construis des solutions qui tiennent la route.</span></p>
 
             <div class="hero-actions h-fade" style="--i:3">
-                <a href="#projects" class="btn-prim mag">
-                    Voir mes projets
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-                <a href="#contact" class="btn-ghost mag">Me contacter</a>
+                <a href="#projects" class="btn-prim mag" data-fr="Voir mes projets" data-en="View my projects">Voir mes projets</a>
+                <a href="#contact" class="btn-ghost mag" data-fr="Me contacter" data-en="Contact me">Me contacter</a>
                 <a href="CV_MBARGA_ERNEST.pdf" download="CV_MBARGA_ERNEST.pdf" class="btn-cv mag">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Télécharger CV
+                    <span data-fr="Télécharger CV" data-en="Download CV">Télécharger CV</span>
                 </a>
             </div>
 
             <div class="hero-stats h-fade" style="--i:4">
                 <div class="hs-item">
                     <b class="hs-n" data-count="20">0</b><span class="hs-plus">+</span>
-                    <span class="hs-lbl">Projets</span>
+                    <span class="hs-lbl"><span data-key="stat-projects">Projets</span></span>
                 </div>
                 <span class="hs-sep"></span>
                 <div class="hs-item">
                     <b class="hs-n" data-count="7">0</b>
-                    <span class="hs-lbl">Domaines</span>
+                    <span class="hs-lbl"><span data-key="stat-domains">Domaines</span></span>
                 </div>
                 <span class="hs-sep"></span>
                 <div class="hs-item">
                     <b class="hs-n" data-count="2">0</b>
-                    <span class="hs-lbl">Ans d'exp.</span>
+                    <span class="hs-lbl"><span data-key="stat-exp">Ans d'exp.</span></span>
                 </div>
             </div>
         </div>
@@ -135,7 +134,7 @@
 
     <div class="scroll-hint">
         <div class="sh-mouse"><div class="sh-wheel"></div></div>
-        <span>Scroll</span>
+        <span><span data-key="scroll-hint">Scroll</span></span>
     </div>
 </section>
 
@@ -144,11 +143,10 @@
      ================================================ -->
 <section id="about" class="section s-about">
     <div class="container" data-reveal>
-        <p class="sec-tag rv" style="--i:0">À propos</p>
+        <p class="sec-tag rv" style="--i:0"><span data-key="sec-about">À propos</span></p>
         <div class="about-grid">
             <div class="about-left rv-slide-left" style="--i:0">
                 <div class="photo-wrap">
-                    <canvas class="water-card" data-water="photo"></canvas>
                     <img src="img/2.jpg" alt="Ernest Mbarga" class="photo-img">
                     <div class="corner tl"></div><div class="corner tr"></div>
                     <div class="corner bl"></div><div class="corner br"></div>
@@ -170,8 +168,8 @@
             </div>
 
             <div class="about-right">
-                <h2 class="about-h rv-clip" style="--i:1">Bonjour, je suis Ernest.</h2>
-                <p class="about-p rv" style="--i:2">Étudiant en <strong>Cybersécurité (B2)</strong> à KEYCE Informatique Yaoundé, je construis des solutions digitales complètes — du frontend au backend, infrastructure cloud et sécurité offensive.</p>
+                <h2 class="about-h rv-clip" style="--i:1"><span data-key="about-h">Bonjour, je suis Ernest.</span></h2>
+                <p class="about-p rv" style="--i:2">Étudiant en <strong>Cybersécurité (B2)</strong> à KEYCE Informatique Yaoundé, je construis des solutions digitales complètes : du frontend au backend, infrastructure cloud et sécurité offensive.</p>
                 <p class="about-p rv" style="--i:3">Mes projets couvrent des apps mobiles React Native, des APIs Spring Boot, du Docker Swarm, des labs d'attaque Kali Linux et des topologies réseau Cisco. J'aime la complexité et je livre des résultats.</p>
                 <div class="fact-grid rv" style="--i:4">
                     <div class="fact-card tilt" style="--i:0">
@@ -201,7 +199,6 @@
                 </div>
                 <a href="#projects" class="btn-prim mag rv" style="--i:5">
                     Voir mes projets
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
             </div>
         </div>
@@ -213,8 +210,8 @@
      ================================================ -->
 <section id="skills" class="section s-skills">
     <div class="container" data-reveal>
-        <p class="sec-tag rv" style="--i:0">Compétences</p>
-        <h2 class="sec-h rv-clip" style="--i:1">Mon stack technique</h2>
+        <p class="sec-tag rv" style="--i:0"><span data-key="sec-skills">Compétences</span></p>
+        <h2 class="sec-h rv-clip" style="--i:1"><span data-key="skills-h">Mon stack technique</span></h2>
         <div class="tabs-row rv" style="--i:2">
             <button class="tab-btn active" data-tab="frontend">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
@@ -296,15 +293,15 @@
      ================================================ -->
 <section id="projects" class="section s-projects">
     <div class="container" data-reveal>
-        <p class="sec-tag rv" style="--i:0">Projets</p>
-        <h2 class="sec-h rv-clip" style="--i:1">Mes réalisations</h2>
+        <p class="sec-tag rv" style="--i:0"><span data-key="sec-projects">Projets</span></p>
+        <h2 class="sec-h rv-clip" style="--i:1"><span data-key="projects-h">Mes réalisations</span></h2>
         <div class="filter-row rv" style="--i:2">
-            <button class="fil-btn active" data-filter="all">Tous</button>
-            <button class="fil-btn" data-filter="mobile">Mobile &amp; Web</button>
-            <button class="fil-btn" data-filter="backend">Backend &amp; API</button>
-            <button class="fil-btn" data-filter="devops">DevOps</button>
-            <button class="fil-btn" data-filter="security">Cybersécurité</button>
-            <button class="fil-btn" data-filter="desktop">Desktop</button>
+            <button class="fil-btn active" data-filter="all"><span data-key="filter-all">Tous</span></button>
+            <button class="fil-btn" data-filter="mobile"><span data-key="filter-mobile">Mobile & Web</span></button>
+            <button class="fil-btn" data-filter="backend"><span data-key="filter-backend">Backend & API</span></button>
+            <button class="fil-btn" data-filter="devops"><span data-key="filter-devops">DevOps</span></button>
+            <button class="fil-btn" data-filter="security"><span data-key="filter-security">Cybersécurité</span></button>
+            <button class="fil-btn" data-filter="desktop"><span data-key="filter-desktop">Desktop</span></button>
         </div>
 
         <div class="proj-grid" id="projGrid" data-reveal>
@@ -320,7 +317,7 @@
                 <p class="pc-desc">Application mobile de covoiturage et livraison collaborative. Paiement Mobile Money MTN/Orange, temps réel WebSockets, géolocalisation OpenStreetMap.</p>
                 <div class="pc-foot">
                     <span class="badge-wip">En cours</span>
-                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -335,7 +332,7 @@
                 <p class="pc-desc">Plateforme de paris sportifs pour le marché camerounais. Architecture microservices Docker, JWT, cotes dynamiques WebSockets en temps réel.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -350,7 +347,7 @@
                 <p class="pc-desc">Plateforme de streaming style Netflix. API REST documentée OpenAPI 3.1, auth JWT, gestion des abonnements et des contenus vidéo.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo/optimum-video" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo/optimum-video" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -365,7 +362,7 @@
                 <p class="pc-desc">Infrastructure web hautement disponible avec réplication MySQL. Load balancing Nginx, clustering multi-nœuds, déploiement zero-downtime.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo/TP-A1-Docker-Flask" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -380,7 +377,7 @@
                 <p class="pc-desc">Déploiement multi-nœuds d'Odoo 16 ERP. Orchestration Ansible, VPN ZeroTier, PostgreSQL haute disponibilité, sécurisation complète.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo/site-entreprise" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -395,7 +392,7 @@
                 <p class="pc-desc">Topologie réseau multi-sites d'entreprise. Routage OSPF, haute disponibilité HSRP, ACL, NAT/PAT et tunnel VPN IPsec sécurisé inter-sites.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -410,7 +407,7 @@
                 <p class="pc-desc">Lab virtuel isolé de simulation d'attaques : reconnaissance Nmap, exploitation Metasploit, social engineering SET, analyse Wireshark et remédiation.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -425,7 +422,7 @@
                 <p class="pc-desc">CLI + GUI qui génère automatiquement un SDK client et un boilerplate backend depuis une spec OpenAPI 3 (YAML/JSON). Interface graphique sombre Tkinter.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -440,7 +437,7 @@
                 <p class="pc-desc">Plateforme de sensibilisation Green IT avec IA. Calcul d'empreinte écologique, visualisations Recharts, recommandations personnalisées via Claude API.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -455,7 +452,7 @@
                 <p class="pc-desc">Mini-framework PHP inspiré de Laravel. Routing dynamique, ORM maison, autoloading PSR-4, middlewares, gestion des erreurs propre.</p>
                 <div class="pc-foot">
                     <span class="badge-done">Complété</span>
-                    <a href="https://github.com/kiyotaka-sudo/mini-framework" target="_blank" class="pc-link">GitHub <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+                    <a href="https://github.com/kiyotaka-sudo/mini-framework" target="_blank" class="pc-link">GitHub</a>
                 </div>
             </article>
 
@@ -475,11 +472,11 @@
      ================================================ -->
 <section id="contact" class="section s-contact">
     <div class="container" data-reveal>
-        <p class="sec-tag rv" style="--i:0">Contact</p>
-        <h2 class="sec-h rv-clip" style="--i:1">Travaillons ensemble</h2>
+        <p class="sec-tag rv" style="--i:0"><span data-key="sec-contact">Contact</span></p>
+        <h2 class="sec-h rv-clip" style="--i:1"><span data-key="contact-h">Travaillons ensemble</span></h2>
         <div class="contact-grid">
             <div class="contact-left rv-slide-left" style="--i:2">
-                <p class="contact-intro">Vous avez un projet, une opportunité de stage ou simplement envie d'échanger ? Je suis ouvert à toute discussion.</p>
+                <p class="contact-intro"><span data-key="contact-intro">Vous avez un projet, une opportunité de stage ou simplement envie d'échanger ? Je suis ouvert à toute discussion.</span>
                 <a href="CV_MBARGA_ERNEST.pdf" download="CV_MBARGA_ERNEST.pdf" class="btn-cv btn-cv--full">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Télécharger mon CV
@@ -536,7 +533,7 @@
                 <a href="mailto:mbargaernest80@gmail.com" class="soc-btn" aria-label="Email"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></a>
             </div>
         </div>
-        <p class="footer-copy">© 2025 Mbarga Ernest · Yaoundé, Cameroun · Conçu &amp; développé avec soin.</p>
+        <p class="footer-copy"><span data-key="footer-copy">© 2025 Mbarga Ernest · Yaoundé, Cameroun · Conçu &amp; développé avec soin.</span></p>
     </div>
 </footer>
 

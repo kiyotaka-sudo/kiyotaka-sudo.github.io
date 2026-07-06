@@ -395,16 +395,113 @@ void main(){
 function initThemeToggle() {
     const btn = document.getElementById('themeToggle');
     if (!btn) return;
-
-    /* Restaurer préférence sauvegardée */
     const saved = localStorage.getItem('em-theme');
     if (saved === 'light') document.body.classList.add('light');
-
     btn.addEventListener('click', () => {
         document.body.classList.toggle('light');
-        const isLight = document.body.classList.contains('light');
-        localStorage.setItem('em-theme', isLight ? 'light' : 'dark');
+        localStorage.setItem('em-theme', document.body.classList.contains('light') ? 'light' : 'dark');
     });
+}
+
+/* ── TRADUCTION FR ↔ EN ──────────────────────────────────────────── */
+const TRANSLATIONS = {
+    fr: {
+        'nav-about':'À propos','nav-skills':'Compétences','nav-projects':'Projets','nav-contact':'Contact',
+        'hero-badge':'Disponible pour des projets & stages',
+        'hero-p':'Étudiant en <strong>Cybersécurité B2</strong> à KEYCE Academy Yaoundé. Full-Stack · DevOps · Réseaux · Offensif : je construis des solutions qui tiennent la route.',
+        'btn-projects':'Voir mes projets','btn-contact':'Me contacter','btn-cv':'Télécharger CV',
+        'stat-projects':'Projets','stat-domains':'Domaines','stat-exp':"Ans d'exp.",
+        'sec-about':'À propos','about-h':'Bonjour, je suis Ernest.',
+        'about-p1':'Étudiant en <strong>Cybersécurité (B2)</strong> à KEYCE Informatique Yaoundé, je construis des solutions digitales complètes : du frontend au backend, infrastructure cloud et sécurité offensive.',
+        'about-p2':"Mes projets couvrent des apps mobiles React Native, des APIs Spring Boot, du Docker Swarm, des labs d'attaque Kali Linux et des topologies réseau Cisco. J'aime la complexité et je livre des résultats.",
+        'fact-school':'KEYCE Informatique','fact-school-sub':'Cybersécurité · B2',
+        'fact-loc':'Yaoundé, Cameroun','fact-loc-sub':'Disponible à distance',
+        'fact-dev':'Full-Stack Dev','fact-dev-sub':'React · Spring Boot',
+        'fact-ops':'DevOps & Cloud','fact-ops-sub':'Docker · Ansible · VMware',
+        'btn-about':'Voir mes projets',
+        'sec-skills':'Compétences','skills-h':'Mon stack technique',
+        'sec-projects':'Projets','projects-h':'Mes réalisations',
+        'filter-all':'Tous','filter-mobile':'Mobile & Web','filter-backend':'Backend & API',
+        'filter-devops':'DevOps','filter-security':'Cybersécurité','filter-desktop':'Desktop',
+        'btn-more':'Voir tous les projets sur GitHub',
+        'sec-contact':'Contact','contact-h':'Travaillons ensemble',
+        'contact-intro':"Vous avez un projet, une opportunité de stage ou simplement envie d'échanger ? Je suis ouvert à toute discussion.",
+        'cv-contact':'Télécharger mon CV',
+        'label-name':'Nom','label-email':'Email','label-subject':'Sujet','label-message':'Message',
+        'btn-send':'Envoyer','form-note':'Je réponds généralement sous 24h.',
+        'footer-copy':'© 2025 Mbarga Ernest · Yaoundé, Cameroun · Conçu & développé avec soin.',
+        'badge-done':'Complété','badge-wip':'En cours',
+        'scroll-hint':'Scroll'
+    },
+    en: {
+        'nav-about':'About','nav-skills':'Skills','nav-projects':'Projects','nav-contact':'Contact',
+        'hero-badge':'Available for projects & internships',
+        'hero-p':'<strong>Cybersecurity B2</strong> student at KEYCE Academy Yaoundé. Full-Stack · DevOps · Networks · Offensive: I build solutions that hold up.',
+        'btn-projects':'View my projects','btn-contact':'Contact me','btn-cv':'Download CV',
+        'stat-projects':'Projects','stat-domains':'Domains','stat-exp':'Years exp.',
+        'sec-about':'About','about-h':'Hello, I am Ernest.',
+        'about-p1':'<strong>Cybersecurity (B2)</strong> student at KEYCE Informatique Yaoundé, I build complete digital solutions — from frontend to backend, cloud infrastructure and offensive security.',
+        'about-p2':'My projects cover React Native mobile apps, Spring Boot APIs, Docker Swarm, Kali Linux attack labs and Cisco network topologies. I love complexity and I deliver results.',
+        'fact-school':'KEYCE Informatique','fact-school-sub':'Cybersecurity · B2',
+        'fact-loc':'Yaoundé, Cameroon','fact-loc-sub':'Available remotely',
+        'fact-dev':'Full-Stack Dev','fact-dev-sub':'React · Spring Boot',
+        'fact-ops':'DevOps & Cloud','fact-ops-sub':'Docker · Ansible · VMware',
+        'btn-about':'View my projects',
+        'sec-skills':'Skills','skills-h':'My tech stack',
+        'sec-projects':'Projects','projects-h':'My work',
+        'filter-all':'All','filter-mobile':'Mobile & Web','filter-backend':'Backend & API',
+        'filter-devops':'DevOps','filter-security':'Cybersecurity','filter-desktop':'Desktop',
+        'btn-more':'View all projects on GitHub',
+        'sec-contact':'Contact','contact-h':"Let's work together",
+        'contact-intro':"Got a project, an internship opportunity or simply want to chat? I'm open to any discussion.",
+        'cv-contact':'Download my CV',
+        'label-name':'Name','label-email':'Email','label-subject':'Subject','label-message':'Message',
+        'btn-send':'Send','form-note':'I usually reply within 24h.',
+        'footer-copy':'© 2025 Mbarga Ernest · Yaoundé, Cameroon · Designed & built with care.',
+        'badge-done':'Completed','badge-wip':'In progress',
+        'scroll-hint':'Scroll'
+    }
+};
+
+function initTranslation() {
+    const btn = document.getElementById('langToggle');
+    const lbl = document.getElementById('langLabel');
+    if (!btn) return;
+    let lang = localStorage.getItem('em-lang') || 'fr';
+    applyLang(lang);
+
+    btn.addEventListener('click', () => {
+        lang = lang === 'fr' ? 'en' : 'fr';
+        localStorage.setItem('em-lang', lang);
+        applyLang(lang);
+    });
+
+    function applyLang(l) {
+        const t = TRANSLATIONS[l];
+        if (lbl) { lbl.textContent = l === 'fr' ? 'EN' : 'FR'; }
+        btn.classList.toggle('active', l === 'en');
+        document.documentElement.lang = l;
+
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const k = el.dataset.key;
+            if (t[k] !== undefined) el.innerHTML = t[k];
+        });
+
+        // Placeholders des champs
+        const fields = {name:'placeholder-name',email:'placeholder-email',subject:'placeholder-subject',message:'placeholder-message'};
+        const placeholders = {
+            fr:{name:'Votre nom',email:'vous@email.com',subject:'Proposition de projet...',message:'Décrivez votre projet...'},
+            en:{name:'Your name',email:'you@email.com',subject:'Project proposal...',message:'Describe your project...'}
+        };
+        Object.entries(fields).forEach(([name]) => {
+            const inp = document.querySelector(`[name="${name}"]`);
+            if (inp) inp.placeholder = placeholders[l][name];
+        });
+
+        document.title = l === 'en'
+            ? 'Ernest Mbarga — Developer & Cybersecurity'
+            : 'Ernest Mbarga — Développeur & Cybersécurité';
+    }
 }
 
 /* ── INIT ───────────────────────────────────────────────────────── */
@@ -420,6 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFloatingLabels();
     initForm();
     initThemeToggle();
+    initTranslation();
 
     /* Init première tab */
     setTimeout(() => {
