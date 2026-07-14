@@ -424,6 +424,17 @@ const TRANSLATIONS = {
         'filter-all':'Tous','filter-mobile':'Mobile & Web','filter-backend':'Backend & API',
         'filter-devops':'DevOps','filter-security':'Cybersécurité','filter-desktop':'Desktop',
         'btn-more':'Voir tous les projets sur GitHub',
+        /* Descriptions projets */
+        'proj-cityshare-desc':'Application mobile de covoiturage et livraison collaborative. Paiement Mobile Money MTN/Orange, temps réel WebSockets, géolocalisation OpenStreetMap.',
+        'proj-keycbet-desc':'Plateforme de paris sportifs pour le marché camerounais. Architecture microservices Docker, JWT, cotes dynamiques WebSockets en temps réel.',
+        'proj-optimum-desc':'Plateforme de streaming style Netflix. API REST documentée OpenAPI 3.1, auth JWT, gestion des abonnements et des contenus vidéo.',
+        'proj-swarm-wp-desc':'Infrastructure web hautement disponible avec réplication MySQL. Load balancing Nginx, clustering multi-nœuds, déploiement zero-downtime.',
+        'proj-swarm-odoo-desc':"Déploiement multi-nœuds d'Odoo 16 ERP. Orchestration Ansible, VPN ZeroTier, PostgreSQL haute disponibilité, sécurisation complète.",
+        'proj-techlink-desc':'Topologie réseau multi-sites d\'entreprise. Routage OSPF, haute disponibilité HSRP, ACL, NAT/PAT et tunnel VPN IPsec sécurisé inter-sites.',
+        'proj-cybersec-desc':'Lab virtuel isolé de simulation d\'attaques : reconnaissance Nmap, exploitation Metasploit, social engineering SET, analyse Wireshark et remédiation.',
+        'proj-keycegen-desc':'CLI + GUI qui génère automatiquement un SDK client et un boilerplate backend depuis une spec OpenAPI 3 (YAML/JSON). Interface graphique sombre Tkinter.',
+        'proj-greenit-desc':'Plateforme de sensibilisation Green IT avec IA. Calcul d\'empreinte écologique, visualisations Recharts, recommandations personnalisées via Claude API.',
+        'proj-php-desc':'Mini-framework PHP inspiré de Laravel. Routing dynamique, ORM maison, autoloading PSR-4, middlewares, gestion des erreurs propre.',
         'sec-contact':'Contact','contact-h':'Travaillons ensemble',
         'contact-intro':"Vous avez un projet, une opportunité de stage ou simplement envie d'échanger ? Je suis ouvert à toute discussion.",
         'cv-contact':'Télécharger mon CV',
@@ -431,7 +442,8 @@ const TRANSLATIONS = {
         'btn-send':'Envoyer','form-note':'Je réponds généralement sous 24h.',
         'footer-copy':'© 2025 Mbarga Ernest · Yaoundé, Cameroun · Conçu & développé avec soin.',
         'badge-done':'Complété','badge-wip':'En cours',
-        'scroll-hint':'Scroll'
+        'scroll-hint':'Scroll',
+        'btn-lang-label':'EN'
     },
     en: {
         'nav-about':'About','nav-skills':'Skills','nav-projects':'Projects','nav-contact':'Contact',
@@ -452,6 +464,17 @@ const TRANSLATIONS = {
         'filter-all':'All','filter-mobile':'Mobile & Web','filter-backend':'Backend & API',
         'filter-devops':'DevOps','filter-security':'Cybersecurity','filter-desktop':'Desktop',
         'btn-more':'View all projects on GitHub',
+        /* Project descriptions */
+        'proj-cityshare-desc':'Mobile ride-sharing and collaborative delivery app for Cameroon. MTN/Orange Mobile Money payment, real-time WebSockets, OpenStreetMap geolocation.',
+        'proj-keycbet-desc':'Sports betting platform for the Cameroonian market. Docker microservices architecture, JWT auth, real-time dynamic odds via WebSockets.',
+        'proj-optimum-desc':'Netflix-style streaming platform. REST API documented with OpenAPI 3.1, JWT auth, subscription and video content management.',
+        'proj-swarm-wp-desc':'Highly available web infrastructure with MySQL replication. Nginx load balancing, multi-node clustering, zero-downtime deployment.',
+        'proj-swarm-odoo-desc':'Multi-node deployment of Odoo 16 ERP. Ansible orchestration, ZeroTier VPN, high-availability PostgreSQL, full security hardening.',
+        'proj-techlink-desc':'Multi-site enterprise network topology. OSPF routing, HSRP high availability, ACL, NAT/PAT and secured inter-site IPsec VPN tunnel.',
+        'proj-cybersec-desc':'Isolated virtual lab for attack simulation: Nmap reconnaissance, Metasploit exploitation, SET social engineering, Wireshark analysis and remediation.',
+        'proj-keycegen-desc':'CLI + GUI that automatically generates a client SDK and backend boilerplate from an OpenAPI 3 spec (YAML/JSON). Dark Tkinter GUI.',
+        'proj-greenit-desc':'Green IT awareness platform with AI. Ecological footprint calculator, Recharts visualizations, personalized recommendations via Claude API.',
+        'proj-php-desc':'PHP mini-framework inspired by Laravel. Dynamic routing, custom ORM, PSR-4 autoloading, middlewares, clean error handling.',
         'sec-contact':'Contact','contact-h':"Let's work together",
         'contact-intro':"Got a project, an internship opportunity or simply want to chat? I'm open to any discussion.",
         'cv-contact':'Download my CV',
@@ -459,7 +482,8 @@ const TRANSLATIONS = {
         'btn-send':'Send','form-note':'I usually reply within 24h.',
         'footer-copy':'© 2025 Mbarga Ernest · Yaoundé, Cameroon · Designed & built with care.',
         'badge-done':'Completed','badge-wip':'In progress',
-        'scroll-hint':'Scroll'
+        'scroll-hint':'Scroll',
+        'btn-lang-label':'FR'
     }
 };
 

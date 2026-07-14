@@ -83,8 +83,27 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
 .nav-link::after { content:''; position:absolute; bottom:4px; left:50%; right:50%; height:1.5px; background:var(--a); border-radius:2px; transition:.3s ease; }
 .nav-link:hover,.nav-link.active { color:var(--t); }
 .nav-link:hover::after,.nav-link.active::after { left:.9rem; right:.9rem; }
-.nav-cta { display:inline-flex; align-items:center; gap:.4rem; background:var(--a); color:var(--bg); font-size:.84rem; font-weight:600; padding:.5rem 1.3rem; border-radius:50px; text-decoration:none; transition:.3s ease; white-space:nowrap; }
-.nav-cta:hover { background:#fff; box-shadow:0 6px 22px rgba(0,212,255,.3); transform:translateY(-2px); }
+.nav-cta {
+    display:inline-flex; align-items:center; gap:.4rem;
+    background:transparent;
+    color:var(--tm);
+    font-size:.84rem; font-weight:600;
+    padding:.5rem 1.3rem; border-radius:50px;
+    text-decoration:none; transition:.3s ease;
+    border:1.5px solid var(--b);
+    white-space:nowrap;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+.nav-cta:hover {
+    color:var(--t);
+    border-color:rgba(255,255,255,.3);
+    transform:translateY(-2px);
+    box-shadow:0 4px 16px rgba(0,0,0,.25);
+}
+body.light .nav-cta:hover {
+    border-color:rgba(0,0,0,.2);
+    box-shadow:0 4px 16px rgba(0,0,0,.1);
+}
 .nav-burger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:3px; }
 .nav-burger span { width:22px; height:1.5px; background:var(--t); border-radius:2px; transition:.3s ease; display:block; }
 .nav-burger.open span:first-child { transform:rotate(45deg) translate(5px,5px); }
@@ -98,53 +117,82 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
 .mob-link { display:block; font-size:2.2rem; font-weight:700; font-family:'Space Grotesk',sans-serif; color:var(--td); text-decoration:none; padding:.5rem 0; transition:.3s ease; letter-spacing:-1px; }
 .mob-link:hover { color:var(--t); }
 
-/* ── BOUTON CV ─────────────────────────────────────────────── */
-.btn-cv {
+/* ── BOUTONS — border + ombre, sans remplissage criard ──────── */
+
+/* Bouton principal */
+.btn-prim {
     display:inline-flex; align-items:center; gap:.5rem;
-    background:transparent;
+    background:rgba(255,255,255,.04);
     color:var(--t);
     font-weight:600; font-size:.9rem;
-    padding:.8rem 1.9rem;
-    border-radius:50px;
-    text-decoration:none; cursor:pointer;
-    border:1.5px solid rgba(255,255,255,.15);
-    transition:.3s ease;
-    position:relative; overflow:hidden;
+    padding:.8rem 1.9rem; border-radius:50px;
+    text-decoration:none; border:1.5px solid rgba(255,255,255,.18);
+    cursor:pointer; transition:.3s ease;
+    box-shadow:0 2px 12px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.08);
 }
-.btn-cv::before {
-    content:'';
-    position:absolute; inset:0;
-    background:linear-gradient(135deg, rgba(0,212,255,.08), rgba(109,40,217,.08));
-    opacity:0; transition:.3s ease;
+.btn-prim:hover {
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.4);
+    transform:translateY(-2px);
+    box-shadow:0 8px 28px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12);
+}
+body.light .btn-prim {
+    background:rgba(0,0,0,.04);
+    border-color:rgba(0,0,0,.18);
+    color:var(--t);
+    box-shadow:0 2px 12px rgba(0,0,0,.08);
+}
+body.light .btn-prim:hover {
+    background:rgba(0,0,0,.08);
+    border-color:rgba(0,0,0,.35);
+    box-shadow:0 8px 28px rgba(0,0,0,.12);
+}
+
+/* Bouton ghost */
+.btn-ghost {
+    display:inline-flex; align-items:center; gap:.5rem;
+    background:transparent; color:var(--tm);
+    font-weight:600; font-size:.9rem;
+    padding:.8rem 1.9rem; border-radius:50px;
+    text-decoration:none; cursor:pointer;
+    border:1.5px solid var(--b); transition:.3s ease;
+}
+.btn-ghost:hover {
+    color:var(--t);
+    border-color:rgba(255,255,255,.25);
+    transform:translateY(-2px);
+    box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+body.light .btn-ghost:hover {
+    border-color:rgba(0,0,0,.2);
+    box-shadow:0 4px 16px rgba(0,0,0,.08);
+}
+
+/* Bouton CV */
+.btn-cv {
+    display:inline-flex; align-items:center; gap:.5rem;
+    background:transparent; color:var(--tm);
+    font-weight:600; font-size:.9rem;
+    padding:.8rem 1.9rem; border-radius:50px;
+    text-decoration:none; cursor:pointer;
+    border:1.5px solid var(--b); transition:.3s ease;
 }
 .btn-cv:hover {
-    border-color:var(--a);
-    color:var(--a);
-    transform:translateY(-3px);
-    box-shadow:0 8px 24px rgba(0,212,255,.15);
+    color:var(--t);
+    border-color:rgba(255,255,255,.25);
+    transform:translateY(-2px);
+    box-shadow:0 4px 16px rgba(0,0,0,.2);
 }
-.btn-cv:hover::before { opacity:1; }
+body.light .btn-cv:hover {
+    border-color:rgba(0,0,0,.2);
+    box-shadow:0 4px 16px rgba(0,0,0,.08);
+}
 
-/* Variante pleine largeur dans la section contact */
+/* Variante pleine largeur */
 .btn-cv--full {
-    width:100%;
-    justify-content:center;
-    margin-bottom:1.8rem;
-    border-color:var(--bh);
-    font-size:.92rem;
-    padding:.85rem 2rem;
+    width:100%; justify-content:center;
+    margin-bottom:1.8rem; font-size:.92rem; padding:.85rem 2rem;
 }
-.btn-cv--full:hover {
-    background:rgba(0,212,255,.06);
-}
-
-
-.btn-prim { display:inline-flex; align-items:center; gap:.5rem; background:linear-gradient(135deg,var(--a),#009fc0); color:var(--bg); font-weight:700; font-size:.9rem; padding:.8rem 1.9rem; border-radius:50px; text-decoration:none; border:none; cursor:pointer; transition:.3s ease; position:relative; overflow:hidden; }
-.btn-prim::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,.15); opacity:0; transition:.3s ease; }
-.btn-prim:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(0,212,255,.35); }
-.btn-prim:hover::after { opacity:1; }
-.btn-ghost { display:inline-flex; align-items:center; gap:.5rem; background:transparent; color:var(--t); font-weight:600; font-size:.9rem; padding:.8rem 1.9rem; border-radius:50px; text-decoration:none; cursor:pointer; border:1.5px solid var(--bh); transition:.3s ease; }
-.btn-ghost:hover { background:rgba(0,212,255,.07); border-color:var(--a); transform:translateY(-3px); }
 
 /* ── SECTIONS ──────────────────────────────────────────────── */
 .section { padding:8rem 0; }
@@ -204,6 +252,11 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     border-radius:20px;
     overflow:hidden;
     flex-shrink:0;
+    /* Ombre douce, pas de bordure arc-en-ciel */
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.08),
+        0 24px 64px rgba(0,0,0,.55),
+        0 8px 24px rgba(0,0,0,.35);
 }
 
 .hero-photo-img {
@@ -212,26 +265,20 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     object-position:center top;
     display:block;
     border-radius:20px;
+    /* Légère désaturation du fond de la photo */
+    filter:contrast(1.04) brightness(1.02);
 }
 
-/* Dégradé en bas pour fondu avec le fond */
+/* Fondu bas discret */
 .hero-photo-glow {
     position:absolute; inset:0;
     border-radius:20px;
-    background:
-        linear-gradient(to bottom, transparent 55%, rgba(7,9,15,.85) 100%),
-        linear-gradient(to right, rgba(7,9,15,.15) 0%, transparent 30%, transparent 70%, rgba(7,9,15,.15) 100%);
+    background:linear-gradient(to bottom, transparent 60%, rgba(7,9,15,.6) 100%);
     pointer-events:none; z-index:1;
 }
 
-/* Bordure accent animée */
-.hero-photo-frame::before {
-    content:'';
-    position:absolute; inset:-1px;
-    border-radius:21px;
-    background:linear-gradient(145deg, rgba(0,212,255,.4), rgba(109,40,217,.2), transparent 60%);
-    z-index:2; pointer-events:none;
-}
+/* Suppression du ::before arc-en-ciel */
+.hero-photo-frame::before { display:none; }
 
 /* Coins décoratifs */
 .hero-photo-frame .corner { z-index:3; }
@@ -352,10 +399,49 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
 .pc-title { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; }
 .pc-desc { color:var(--tm); font-size:.87rem; line-height:1.75; flex:1; }
 .pc-foot { display:flex; align-items:center; justify-content:space-between; padding-top:.9rem; border-top:1px solid var(--b); margin-top:auto; }
-.badge-done { background:rgba(16,185,129,.1); color:var(--g); border:1px solid rgba(16,185,129,.22); font-size:.74rem; font-weight:600; padding:.2rem .7rem; border-radius:50px; }
-.badge-wip  { background:rgba(245,158,11,.1); color:var(--y); border:1px solid rgba(245,158,11,.22); font-size:.74rem; font-weight:600; padding:.2rem .7rem; border-radius:50px; }
-.pc-link { display:inline-flex; align-items:center; gap:.3rem; color:var(--a); font-size:.82rem; font-weight:600; text-decoration:none; transition:.2s ease; }
-.pc-link:hover { gap:.55rem; }
+/* Badges cartes — fondus dans les couleurs du site */
+.badge-done {
+    background:rgba(255,255,255,.05);
+    color:var(--tm);
+    border:1px solid rgba(255,255,255,.1);
+    font-size:.74rem; font-weight:600;
+    padding:.2rem .7rem; border-radius:50px;
+}
+.badge-wip {
+    background:rgba(255,255,255,.05);
+    color:var(--td);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:.74rem; font-weight:600;
+    padding:.2rem .7rem; border-radius:50px;
+}
+body.light .badge-done {
+    background:rgba(0,0,0,.04);
+    color:var(--tm);
+    border-color:rgba(0,0,0,.1);
+}
+body.light .badge-wip {
+    background:rgba(0,0,0,.04);
+    color:var(--td);
+    border-color:rgba(0,0,0,.08);
+}
+
+/* Lien GitHub cartes */
+.pc-link {
+    display:inline-flex; align-items:center; gap:.35rem;
+    color:var(--tm); font-size:.82rem; font-weight:500;
+    text-decoration:none; transition:.25s ease;
+    padding:.2rem .5rem; border-radius:6px;
+    border:1px solid transparent;
+}
+.pc-link:hover {
+    color:var(--t);
+    border-color:var(--b);
+    background:rgba(255,255,255,.04);
+}
+body.light .pc-link:hover {
+    background:rgba(0,0,0,.04);
+    border-color:rgba(0,0,0,.08);
+}
 .proj-more { text-align:center; margin-top:3rem; }
 
 /* ── CONTACT ────────────────────────────────────────────────── */
