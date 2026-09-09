@@ -24,39 +24,7 @@
     --shadow-card: 0 4px 24px rgba(0,0,0,.4);
 }
 
-/* ── THÈME CLAIR ───────────────────────────────────────────── */
-body.light {
-    --bg:    #f5f7fa;
-    --bg2:   #eaecf3;
-    --card:  #ffffff;
-    --card2: #f0f2f8;
-    --b:     rgba(0,0,0,.1);
-    --bh:    rgba(0,100,180,.28);
-    --a:     #0070b8;
-    --a2:    #5b21b6;
-    --g:     #059669;
-    --y:     #d97706;
-    --t:     #0d1117;
-    --tm:    #4a5568;
-    --td:    #9ca3b0;
-    --shadow-card: 0 4px 24px rgba(0,0,0,.07);
-}
-
-body.light { background:var(--bg); color:var(--t); }
-body.light ::-webkit-scrollbar-track { background:var(--bg2); }
-body.light ::-webkit-scrollbar-thumb { background:var(--a); }
-body.light .navbar.solid {
-    background:rgba(245,247,250,.92);
-    border-bottom:1px solid rgba(0,0,0,.08);
-}
-/* Hero en mode clair : fond sombre pour que mix-blend-mode:multiply fonctionne */
-body.light .hero { background:#0d1117; }
-body.light #waterCanvas { opacity:.2; }
-body.light .hero-bg-word { -webkit-text-stroke:2px rgba(255,255,255,.06); }
-body.light .sk-bar { background:rgba(0,0,0,.08); }
-body.light .proj-card, body.light .sk-card, body.light .fact-card, body.light .ci-item { box-shadow:var(--shadow-card); }
-body.light .mob-menu { background:rgba(245,247,250,.98); }
-body.light .footer { background:var(--bg2); }
+/* Mode clair supprimé — dark only */
 
 html { scroll-behavior:smooth; }
 body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--t); line-height:1.7; overflow-x:hidden; cursor:auto; }
@@ -104,10 +72,6 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     transform:translateY(-2px);
     box-shadow:0 4px 16px rgba(0,0,0,.25);
 }
-body.light .nav-cta:hover {
-    border-color:rgba(0,0,0,.2);
-    box-shadow:0 4px 16px rgba(0,0,0,.1);
-}
 .nav-burger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:3px; }
 .nav-burger span { width:22px; height:1.5px; background:var(--t); border-radius:2px; transition:.3s ease; display:block; }
 .nav-burger.open span:first-child { transform:rotate(45deg) translate(5px,5px); }
@@ -140,18 +104,6 @@ body.light .nav-cta:hover {
     transform:translateY(-2px);
     box-shadow:0 8px 28px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12);
 }
-body.light .btn-prim {
-    background:rgba(0,0,0,.04);
-    border-color:rgba(0,0,0,.18);
-    color:var(--t);
-    box-shadow:0 2px 12px rgba(0,0,0,.08);
-}
-body.light .btn-prim:hover {
-    background:rgba(0,0,0,.08);
-    border-color:rgba(0,0,0,.35);
-    box-shadow:0 8px 28px rgba(0,0,0,.12);
-}
-
 /* Bouton ghost */
 .btn-ghost {
     display:inline-flex; align-items:center; gap:.5rem;
@@ -167,11 +119,6 @@ body.light .btn-prim:hover {
     transform:translateY(-2px);
     box-shadow:0 4px 16px rgba(0,0,0,.2);
 }
-body.light .btn-ghost:hover {
-    border-color:rgba(0,0,0,.2);
-    box-shadow:0 4px 16px rgba(0,0,0,.08);
-}
-
 /* Bouton CV */
 .btn-cv {
     display:inline-flex; align-items:center; gap:.5rem;
@@ -187,11 +134,6 @@ body.light .btn-ghost:hover {
     transform:translateY(-2px);
     box-shadow:0 4px 16px rgba(0,0,0,.2);
 }
-body.light .btn-cv:hover {
-    border-color:rgba(0,0,0,.2);
-    box-shadow:0 4px 16px rgba(0,0,0,.08);
-}
-
 /* Variante pleine largeur */
 .btn-cv--full {
     width:100%; justify-content:center;
@@ -232,24 +174,23 @@ body.light .btn-cv:hover {
     font-size:clamp(9rem, 20vw, 22rem);
     font-weight:800;
     letter-spacing:-.04em;
-    color:transparent;
-    -webkit-text-stroke:1.5px rgba(255,255,255,.08);
+    /* Couleur crème solide comme la référence */
+    color:#e8dcc8;
     white-space:nowrap;
-    z-index:1;
+    /* DERRIÈRE la photo (z-index inférieur à hero-photo-center) */
+    z-index:2;
     pointer-events:none;
     user-select:none;
     opacity:0;
     transition:opacity 1.2s ease .2s, transform 1.2s var(--ease) .2s;
 }
-body.light .hero-bg-word {
-    -webkit-text-stroke:1.5px rgba(0,0,0,.07);
-}
 
-/* ── PHOTO AU CENTRE — passe par-dessus le texte ── */
+/* ── PHOTO AU CENTRE — passe PAR-DESSUS le mot PORTFOLIO ── */
 .hero-photo-center {
     position:absolute;
     bottom:0;
     left:50%; transform:translateX(-50%);
+    /* z-index > hero-bg-word (2) pour passer devant */
     z-index:10;
     width:clamp(260px, 32vw, 460px);
     pointer-events:none;
@@ -260,16 +201,11 @@ body.light .hero-bg-word {
     display:block;
     object-fit:cover;
     object-position:center top;
-    /* mix-blend-mode:multiply fusionne le blanc avec le fond → disparaît */
-    mix-blend-mode:multiply;
-    -webkit-mask-image:linear-gradient(to bottom, black 50%, transparent 100%);
-    mask-image:linear-gradient(to bottom, black 50%, transparent 100%);
-    filter:contrast(1.1) brightness(0.92);
-}
-/* Mode clair : fond clair aussi → multiply marche toujours */
-body.light .hero-center-img {
-    mix-blend-mode:multiply;
-    filter:contrast(1.05) brightness(0.88);
+    /* PAS de mix-blend-mode — la photo garde son fond blanc
+       ce fond blanc cache naturellement les lettres derrière */
+    -webkit-mask-image:linear-gradient(to bottom, black 55%, transparent 95%);
+    mask-image:linear-gradient(to bottom, black 55%, transparent 95%);
+    filter:contrast(1.05);
 }
 
 /* Cadre décoratif autour de la photo */
@@ -283,8 +219,6 @@ body.light .hero-center-img {
     pointer-events:none;
     z-index:-1;
 }
-body.light .hero-photo-outline { border-color:rgba(0,0,0,.12); }
-
 /* ── NOM + ÉCOLE en haut à gauche ── */
 .hero-top-left {
     position:absolute;
@@ -304,11 +238,6 @@ body.light .hero-photo-outline { border-color:rgba(0,0,0,.12); }
     display:flex; align-items:center; justify-content:center;
     letter-spacing:-.5px;
 }
-body.light .hero-initials {
-    background:rgba(0,0,0,.05);
-    border-color:rgba(0,0,0,.1);
-}
-
 .hero-name-block { display:flex; flex-direction:column; gap:.1rem; }
 .hero-full-name { font-size:.95rem; font-weight:700; color:var(--t); line-height:1.2; }
 .hero-school { font-size:.75rem; color:var(--tm); }
@@ -363,9 +292,6 @@ body.light .hero-initials {
     cursor:default;
 }
 .hri-item:hover { border-color:rgba(255,255,255,.3); color:var(--t); background:rgba(255,255,255,.08); }
-body.light .hri-item { border-color:rgba(0,0,0,.1); background:rgba(0,0,0,.03); }
-body.light .hri-item:hover { border-color:rgba(0,0,0,.2); background:rgba(0,0,0,.06); }
-
 /* ── STATS en bas ── */
 .hero-stats-bar {
     position:absolute;
@@ -379,8 +305,6 @@ body.light .hri-item:hover { border-color:rgba(0,0,0,.2); background:rgba(0,0,0,
 .hs-plus { color:var(--tm); font-size:1.2rem; font-weight:700; vertical-align:top; margin-top:.2rem; }
 .hs-lbl { display:block; font-size:.68rem; color:var(--tm); text-transform:uppercase; letter-spacing:1.5px; margin-top:.25rem; }
 .hs-sep { width:1px; height:32px; background:rgba(255,255,255,.1); }
-body.light .hs-sep { background:rgba(0,0,0,.1); }
-
 /* Scroll hint */
 .scroll-hint { position:absolute; bottom:1.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.4rem; z-index:15; color:var(--td); font-size:.68rem; letter-spacing:2px; text-transform:uppercase; }
 .sh-mouse { width:20px; height:30px; border:1.5px solid var(--td); border-radius:10px; display:flex; justify-content:center; padding-top:5px; }
@@ -580,17 +504,6 @@ body.light .hs-sep { background:rgba(0,0,0,.1); }
     font-size:.74rem; font-weight:600;
     padding:.2rem .7rem; border-radius:50px;
 }
-body.light .badge-done {
-    background:rgba(0,0,0,.04);
-    color:var(--tm);
-    border-color:rgba(0,0,0,.1);
-}
-body.light .badge-wip {
-    background:rgba(0,0,0,.04);
-    color:var(--td);
-    border-color:rgba(0,0,0,.08);
-}
-
 /* Lien GitHub cartes */
 .pc-link {
     display:inline-flex; align-items:center; gap:.35rem;
@@ -603,10 +516,6 @@ body.light .badge-wip {
     color:var(--t);
     border-color:var(--b);
     background:rgba(255,255,255,.04);
-}
-body.light .pc-link:hover {
-    background:rgba(0,0,0,.04);
-    border-color:rgba(0,0,0,.08);
 }
 .proj-more { text-align:center; margin-top:3rem; }
 
@@ -697,35 +606,6 @@ body.light .pc-link:hover {
 }
 .btn-lang:hover { color:var(--a); border-color:var(--a); }
 .btn-lang.active { background:rgba(0,212,255,.09); color:var(--a); border-color:var(--a); }
-
-/* ── TOGGLE THÈME ──────────────────────────────────────────── */
-.theme-toggle {
-    position:fixed;
-    bottom:2rem; right:2rem;
-    width:46px; height:46px;
-    border-radius:50%;
-    background:var(--card);
-    border:1.5px solid var(--b);
-    color:var(--tm);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-    z-index:800;
-    transition:background .3s, border-color .3s, color .3s, transform .3s, box-shadow .3s;
-    box-shadow:0 4px 20px rgba(0,0,0,.25);
-}
-.theme-toggle:hover {
-    background:var(--a);
-    border-color:var(--a);
-    color:var(--bg);
-    transform:scale(1.1) rotate(15deg);
-    box-shadow:0 6px 24px rgba(0,212,255,.3);
-}
-/* Icône lune visible en dark, soleil en light */
-.theme-toggle .icon-moon { display:block; }
-.theme-toggle .icon-sun  { display:none; }
-body.light .theme-toggle .icon-moon { display:none; }
-body.light .theme-toggle .icon-sun  { display:block; }
-body.light .theme-toggle { box-shadow:0 4px 20px rgba(0,0,0,.12); }
 
 /* ── RESPONSIVE ────────────────────────────────────────────── */
 @media(max-width:1024px){

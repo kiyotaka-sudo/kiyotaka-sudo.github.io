@@ -1,4 +1,4 @@
-/* ================================================================
+﻿/* ================================================================
    ERNEST MBARGA — PORTFOLIO  v4
    ================================================================ */
 'use strict';
@@ -396,17 +396,6 @@ void main(){
     })();
 })();
 
-/* ── TOGGLE THÈME ───────────────────────────────────────────────── */
-function initThemeToggle() {
-    const btn = document.getElementById('themeToggle');
-    if (!btn) return;
-    const saved = localStorage.getItem('em-theme');
-    if (saved === 'light') document.body.classList.add('light');
-    btn.addEventListener('click', () => {
-        document.body.classList.toggle('light');
-        localStorage.setItem('em-theme', document.body.classList.contains('light') ? 'light' : 'dark');
-    });
-}
 
 /* ── TRADUCTION FR ↔ EN ──────────────────────────────────────────── */
 const TRANSLATIONS = {
@@ -545,7 +534,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroParallax();
     initFloatingLabels();
     initForm();
-    initThemeToggle();
     initTranslation();
 
     /* Init première tab */
