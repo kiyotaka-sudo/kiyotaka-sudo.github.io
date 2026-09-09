@@ -26,33 +26,37 @@
 
 /* ── THÈME CLAIR ───────────────────────────────────────────── */
 body.light {
-    --bg:    #f0f4ff;
-    --bg2:   #e8edf8;
+    --bg:    #f5f7fa;
+    --bg2:   #eaecf3;
     --card:  #ffffff;
-    --card2: #f5f7ff;
-    --b:     rgba(0,0,0,.09);
-    --bh:    rgba(0,150,200,.3);
-    --a:     #0088bb;
+    --card2: #f0f2f8;
+    --b:     rgba(0,0,0,.1);
+    --bh:    rgba(0,100,180,.28);
+    --a:     #0070b8;
     --a2:    #5b21b6;
     --g:     #059669;
     --y:     #d97706;
-    --t:     #0f172a;
-    --tm:    #475569;
-    --td:    #94a3b8;
-    --shadow-card: 0 4px 24px rgba(0,0,0,.08);
+    --t:     #0d1117;
+    --tm:    #4a5568;
+    --td:    #9ca3b0;
+    --shadow-card: 0 4px 24px rgba(0,0,0,.07);
 }
 
 body.light { background:var(--bg); color:var(--t); }
 body.light ::-webkit-scrollbar-track { background:var(--bg2); }
 body.light ::-webkit-scrollbar-thumb { background:var(--a); }
-body.light .navbar.solid { background:rgba(240,244,255,.92); }
-body.light .hero { background:linear-gradient(135deg,#e8f4ff 0%,#f0f4ff 100%); }
-body.light #waterCanvas { opacity:.35; }   /* eau moins visible en mode clair */
+body.light .navbar.solid {
+    background:rgba(245,247,250,.92);
+    border-bottom:1px solid rgba(0,0,0,.08);
+}
+/* Hero en mode clair : fond sombre pour que mix-blend-mode:multiply fonctionne */
+body.light .hero { background:#0d1117; }
+body.light #waterCanvas { opacity:.2; }
+body.light .hero-bg-word { -webkit-text-stroke:2px rgba(255,255,255,.06); }
 body.light .sk-bar { background:rgba(0,0,0,.08); }
 body.light .proj-card, body.light .sk-card, body.light .fact-card, body.light .ci-item { box-shadow:var(--shadow-card); }
-body.light .mob-menu { background:rgba(240,244,255,.98); }
+body.light .mob-menu { background:rgba(245,247,250,.98); }
 body.light .footer { background:var(--bg2); }
-body.light .hero-name-grad { background:linear-gradient(135deg,#0f172a 0%,#334155 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 
 html { scroll-behavior:smooth; }
 body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--t); line-height:1.7; overflow-x:hidden; cursor:auto; }
@@ -256,10 +260,16 @@ body.light .hero-bg-word {
     display:block;
     object-fit:cover;
     object-position:center top;
-    /* Fondu en bas pour s'intégrer au fond */
-    -webkit-mask-image:linear-gradient(to bottom, black 55%, transparent 100%);
-    mask-image:linear-gradient(to bottom, black 55%, transparent 100%);
-    filter:contrast(1.05);
+    /* mix-blend-mode:multiply fusionne le blanc avec le fond → disparaît */
+    mix-blend-mode:multiply;
+    -webkit-mask-image:linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image:linear-gradient(to bottom, black 50%, transparent 100%);
+    filter:contrast(1.1) brightness(0.92);
+}
+/* Mode clair : fond clair aussi → multiply marche toujours */
+body.light .hero-center-img {
+    mix-blend-mode:multiply;
+    filter:contrast(1.05) brightness(0.88);
 }
 
 /* Cadre décoratif autour de la photo */
