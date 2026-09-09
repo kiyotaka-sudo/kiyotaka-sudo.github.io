@@ -69,66 +69,79 @@
 </div>
 
 <!-- ================================================
-     HERO — canvas WebGL eau + contenu
+     HERO — Style PORTFOLIO full-screen
      ================================================ -->
 <section id="hero" class="hero">
     <canvas id="waterCanvas"></canvas>
 
-    <div class="hero-inner">
-        <!-- Colonne gauche : texte -->
-        <div class="hero-body">
-            <div class="hero-label h-fade" style="--i:0">
-                <span class="pulse-dot"></span>
-                <span data-key="hero-badge">Disponible pour des projets &amp; stages</span>
-            </div>
+    <!-- Mot PORTFOLIO en arrière-plan -->
+    <div class="hero-bg-word" aria-hidden="true">PORTFOLIO</div>
 
-            <h1 class="hero-h1">
-                <span class="hero-word-wrap">
-                    <span class="word-mask"><span class="hero-word hero-name-grad">Mbarga</span></span>
-                    <span class="word-mask"><span class="hero-word hero-name-grad">Ernest</span></span>
-                </span>
-                <span class="hero-role h-fade" style="--i:1">
-                    <span id="typedText"></span><span class="caret"></span>
-                </span>
-            </h1>
+    <!-- Photo au centre, passe par-dessus le texte -->
+    <div class="hero-photo-center h-fade" style="--i:1">
+        <img src="img/2.jpg" alt="Ernest Mbarga" class="hero-center-img">
+        <!-- Cadre décoratif autour de la photo -->
+        <div class="hero-photo-outline"></div>
+    </div>
 
-            <p class="hero-p h-fade" style="--i:2"><span data-key="hero-p">Étudiant en <strong>Cybersécurité B2</strong> à KEYCE Academy Yaoundé. Full-Stack · DevOps · Réseaux · Offensif : je construis des solutions qui tiennent la route.</span></p>
+    <!-- Contenu bas gauche -->
+    <div class="hero-bottom-left h-fade" style="--i:2">
+        <div class="hero-role-tag">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span id="typedText"></span><span class="caret"></span>
+        </div>
+        <div class="hero-actions h-fade" style="--i:3">
+            <a href="#projects" class="btn-prim mag"><span data-key="btn-projects">Voir mes projets</span></a>
+            <a href="#contact"  class="btn-ghost mag"><span data-key="btn-contact">Me contacter</span></a>
+            <a href="CV_MBARGA_ERNEST.pdf" download="CV_MBARGA_ERNEST.pdf" class="btn-cv mag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span data-key="btn-cv">Télécharger CV</span>
+            </a>
+        </div>
+    </div>
 
-            <div class="hero-actions h-fade" style="--i:3">
-                <a href="#projects" class="btn-prim mag" data-fr="Voir mes projets" data-en="View my projects">Voir mes projets</a>
-                <a href="#contact" class="btn-ghost mag" data-fr="Me contacter" data-en="Contact me">Me contacter</a>
-                <a href="CV_MBARGA_ERNEST.pdf" download="CV_MBARGA_ERNEST.pdf" class="btn-cv mag">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    <span data-fr="Télécharger CV" data-en="Download CV">Télécharger CV</span>
-                </a>
-            </div>
-
-            <div class="hero-stats h-fade" style="--i:4">
-                <div class="hs-item">
-                    <b class="hs-n" data-count="20">0</b><span class="hs-plus">+</span>
-                    <span class="hs-lbl"><span data-key="stat-projects">Projets</span></span>
-                </div>
-                <span class="hs-sep"></span>
-                <div class="hs-item">
-                    <b class="hs-n" data-count="7">0</b>
-                    <span class="hs-lbl"><span data-key="stat-domains">Domaines</span></span>
-                </div>
-                <span class="hs-sep"></span>
-                <div class="hs-item">
-                    <b class="hs-n" data-count="2">0</b>
-                    <span class="hs-lbl"><span data-key="stat-exp">Ans d'exp.</span></span>
-                </div>
+    <!-- Nom + badge en haut à gauche -->
+    <div class="hero-top-left h-fade" style="--i:0">
+        <div class="hero-name-block">
+            <span class="hero-initials">EM</span>
+            <div>
+                <span class="hero-full-name">Mbarga Ernest</span>
+                <span class="hero-school">KEYCE Academy · B2 Cybersécurité</span>
             </div>
         </div>
+    </div>
 
-        <!-- Colonne droite : photo -->
-        <div class="hero-photo h-fade" style="--i:2">
-            <div class="hero-photo-frame">
-                <img src="img/2.jpg" alt="Ernest Mbarga" class="hero-photo-img">
-                <div class="hero-photo-glow"></div>
-                <div class="corner tl"></div><div class="corner tr"></div>
-                <div class="corner bl"></div><div class="corner br"></div>
-            </div>
+    <!-- Icônes domaines à droite -->
+    <div class="hero-right-icons h-fade" style="--i:2">
+        <div class="hri-item" title="Développement Web">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="hri-item" title="Backend & API">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        </div>
+        <div class="hri-item" title="Code">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div class="hri-item" title="Cybersécurité">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+    </div>
+
+    <!-- Stats en bas -->
+    <div class="hero-stats-bar h-fade" style="--i:4">
+        <div class="hs-item">
+            <b class="hs-n" data-count="20">0</b><span class="hs-plus">+</span>
+            <span class="hs-lbl"><span data-key="stat-projects">Projets</span></span>
+        </div>
+        <span class="hs-sep"></span>
+        <div class="hs-item">
+            <b class="hs-n" data-count="7">0</b>
+            <span class="hs-lbl"><span data-key="stat-domains">Domaines</span></span>
+        </div>
+        <span class="hs-sep"></span>
+        <div class="hs-item">
+            <b class="hs-n" data-count="2">0</b>
+            <span class="hs-lbl"><span data-key="stat-exp">Ans d'exp.</span></span>
         </div>
     </div>
 
@@ -137,6 +150,7 @@
         <span><span data-key="scroll-hint">Scroll</span></span>
     </div>
 </section>
+
 
 <!-- ================================================
      ABOUT

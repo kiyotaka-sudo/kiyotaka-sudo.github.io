@@ -71,12 +71,18 @@ if (burger && mobMenu) {
 
 /* ── 6. HERO REVEAL ─────────────────────────────────────────────── */
 function heroReveal() {
-    document.querySelectorAll('.hero-word').forEach((w, i) => {
-        setTimeout(() => w.classList.add('out'), 60 + i * 90);
+    /* Photo + éléments positionnés en absolu */
+    document.querySelectorAll('.hero .h-fade').forEach((el, i) => {
+        setTimeout(() => el.classList.add('h-fade--in'), i * 120);
     });
-    document.querySelectorAll('.h-fade').forEach((el, i) => {
-        setTimeout(() => el.classList.add('h-fade--in'), 300 + i * 140);
-    });
+    /* Mot PORTFOLIO : apparaît avec un léger délai */
+    const bgWord = document.querySelector('.hero-bg-word');
+    if (bgWord) {
+        setTimeout(() => {
+            bgWord.style.opacity = '1';
+            bgWord.style.transform = 'translate(-50%, -50%) translateY(0)';
+        }, 100);
+    }
 }
 
 /* ── 7. SCROLL REVEAL ───────────────────────────────────────────── */
@@ -212,13 +218,12 @@ function initHeroParallax() {
 
     // [sélecteur, facteur depth px/unité-normalised]
     const layers = [
-        ['.hero-label',     26],
-        ['.hero-word-wrap', 20],
-        ['.hero-role',      14],
-        ['.hero-p',          9],
-        ['.hero-actions',    6],
-        ['.hero-stats',      3],
-        ['.hero-photo',     -8],  /* photo va en sens inverse = effet de profondeur */
+        ['.hero-top-left',      18],
+        ['.hero-role-tag',      14],
+        ['.hero-actions',       10],
+        ['.hero-right-icons',   -8],
+        ['.hero-stats-bar',      5],
+        ['.hero-photo-center', -12],  /* photo bouge en sens opposé */
     ];
 
     let tx = 0, ty = 0, cx = 0, cy = 0;
