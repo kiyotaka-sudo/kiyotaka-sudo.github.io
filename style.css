@@ -171,28 +171,34 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     top:50%; left:50%;
     transform:translate(-50%, -50%) translateY(30px);
     font-family:'Space Grotesk',sans-serif;
-    font-size:clamp(9rem, 20vw, 22rem);
+    /* Taille calculée pour remplir exactement la largeur */
+    font-size:clamp(7rem, 16.5vw, 18rem);
     font-weight:800;
-    letter-spacing:-.04em;
-    /* Couleur crème solide comme la référence */
-    color:#e8dcc8;
+    letter-spacing:-.02em;
     white-space:nowrap;
-    /* DERRIÈRE la photo (z-index inférieur à hero-photo-center) */
+    /* Couleur crème solide */
+    color:#e8dcc8;
+    /* DERRIÈRE la photo */
     z-index:2;
     pointer-events:none;
     user-select:none;
     opacity:0;
     transition:opacity 1.2s ease .2s, transform 1.2s var(--ease) .2s;
+    /* Limiter strictement à la largeur de l'écran */
+    width:100vw;
+    text-align:center;
 }
 
 /* ── PHOTO AU CENTRE — passe PAR-DESSUS le mot PORTFOLIO ── */
 .hero-photo-center {
     position:absolute;
-    bottom:0;
-    left:50%; transform:translateX(-50%);
-    /* z-index > hero-bg-word (2) pour passer devant */
+    /* Centre vertical aligné sur le mot */
+    top:50%; left:50%;
+    transform:translate(-50%, -38%);
+    /* z-index > hero-bg-word (2) */
     z-index:10;
-    width:clamp(260px, 32vw, 460px);
+    /* Largeur généreuse pour couvrir le mot */
+    width:clamp(340px, 38vw, 560px);
     pointer-events:none;
 }
 
@@ -201,11 +207,9 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     display:block;
     object-fit:cover;
     object-position:center top;
-    /* PAS de mix-blend-mode — la photo garde son fond blanc
-       ce fond blanc cache naturellement les lettres derrière */
-    -webkit-mask-image:linear-gradient(to bottom, black 55%, transparent 95%);
-    mask-image:linear-gradient(to bottom, black 55%, transparent 95%);
-    filter:contrast(1.05);
+    /* Fondu bas discret pour s'intégrer */
+    -webkit-mask-image:linear-gradient(to bottom, black 65%, transparent 100%);
+    mask-image:linear-gradient(to bottom, black 65%, transparent 100%);
 }
 
 /* Cadre décoratif autour de la photo */
@@ -316,9 +320,13 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
 .h-fade--in { opacity:1; transform:translateY(0); }
 
 /* ── Responsive hero ── */
+@media(max-width:1200px) {
+    .hero-bg-word { font-size:clamp(6rem, 15vw, 14rem); }
+    .hero-photo-center { width:clamp(300px, 36vw, 480px); }
+}
 @media(max-width:768px) {
-    .hero-bg-word { font-size:clamp(5rem,18vw,9rem); }
-    .hero-photo-center { width:clamp(200px,55vw,320px); }
+    .hero-bg-word { font-size:clamp(4.5rem, 13vw, 9rem); letter-spacing:-.02em; }
+    .hero-photo-center { width:clamp(220px, 55vw, 360px); transform:translate(-50%, -35%); }
     .hero-bottom-left { bottom:7rem; left:1.2rem; max-width:calc(100vw - 90px); }
     .hero-top-left { top:1.5rem; left:1.2rem; }
     .hero-right-icons { right:1rem; gap:1rem; }
@@ -329,7 +337,8 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     .btn-prim,.btn-ghost,.btn-cv { font-size:.82rem; padding:.65rem 1.3rem; }
 }
 @media(max-width:480px) {
-    .hero-bg-word { font-size:clamp(4rem,22vw,7rem); }
+    .hero-bg-word { font-size:clamp(3.5rem, 14vw, 6rem); }
+    .hero-photo-center { width:clamp(180px, 60vw, 280px); }
     .hero-stats-bar { display:none; }
     .hero-bottom-left { bottom:5.5rem; }
 }
