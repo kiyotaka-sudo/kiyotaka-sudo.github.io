@@ -402,7 +402,7 @@ const TRANSLATIONS = {
     fr: {
         'nav-about':'À propos','nav-skills':'Compétences','nav-projects':'Projets','nav-contact':'Contact',
         'hero-badge':'Disponible pour des projets & stages',
-        'hero-p':'Étudiant en <strong>Cybersécurité B2</strong> à KEYCE Academy Yaoundé. Full-Stack · DevOps · Réseaux · Offensif : je construis des solutions qui tiennent la route.',
+        'hero-p':'Étudiant en <strong>Cybersécurité B2</strong> à KEYCE Informatique Yaoundé. Full-Stack · DevOps · Réseaux · Offensif : je construis des solutions qui tiennent la route.',
         'btn-projects':'Voir mes projets','btn-contact':'Me contacter','btn-cv':'Télécharger CV',
         'stat-projects':'Projets','stat-domains':'Domaines','stat-exp':"Ans d'exp.",
         'sec-about':'À propos','about-h':'Bonjour, je suis Ernest.',
@@ -442,7 +442,7 @@ const TRANSLATIONS = {
     en: {
         'nav-about':'About','nav-skills':'Skills','nav-projects':'Projects','nav-contact':'Contact',
         'hero-badge':'Available for projects & internships',
-        'hero-p':'<strong>Cybersecurity B2</strong> student at KEYCE Academy Yaoundé. Full-Stack · DevOps · Networks · Offensive: I build solutions that hold up.',
+        'hero-p':'<strong>Cybersecurity B2</strong> student at KEYCE Informatique Yaoundé. Full-Stack · DevOps · Networks · Offensive: I build solutions that hold up.',
         'btn-projects':'View my projects','btn-contact':'Contact me','btn-cv':'Download CV',
         'stat-projects':'Projects','stat-domains':'Domains','stat-exp':'Years exp.',
         'sec-about':'About','about-h':'Hello, I am Ernest.',
