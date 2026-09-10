@@ -171,35 +171,29 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     top:50%; left:50%;
     transform:translate(-50%, -50%) translateY(30px);
     font-family:'Space Grotesk',sans-serif;
-    /* Taille calculée pour remplir exactement la largeur */
-    font-size:clamp(7rem, 16.5vw, 18rem);
+    /* Volontairement plus grand que l'écran — déborde des deux côtés */
+    font-size:clamp(10rem, 22vw, 26rem);
     font-weight:800;
     letter-spacing:-.02em;
     white-space:nowrap;
-    /* Couleur crème solide */
     color:#e8dcc8;
-    /* DERRIÈRE la photo */
     z-index:2;
     pointer-events:none;
     user-select:none;
     opacity:0;
     transition:opacity 1.2s ease .2s, transform 1.2s var(--ease) .2s;
-    /* Limiter strictement à la largeur de l'écran */
-    width:100vw;
-    text-align:center;
 }
 
-/* ── PHOTO AU CENTRE — passe PAR-DESSUS le mot PORTFOLIO ── */
+/* ── PHOTO AU CENTRE — sans fond visible ── */
 .hero-photo-center {
     position:absolute;
-    /* Centre vertical aligné sur le mot */
     top:50%; left:50%;
-    transform:translate(-50%, -38%);
-    /* z-index > hero-bg-word (2) */
+    transform:translate(-50%, -30%);
     z-index:10;
-    /* Largeur généreuse pour couvrir le mot */
-    width:clamp(340px, 38vw, 560px);
+    width:clamp(320px, 36vw, 520px);
     pointer-events:none;
+    /* Pas de background, pas de border */
+    background:transparent;
 }
 
 .hero-center-img {
@@ -207,22 +201,15 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     display:block;
     object-fit:cover;
     object-position:center top;
-    /* Fondu bas discret pour s'intégrer */
-    -webkit-mask-image:linear-gradient(to bottom, black 65%, transparent 100%);
-    mask-image:linear-gradient(to bottom, black 65%, transparent 100%);
+    /* screen : fonds noirs disparaissent, personne reste visible */
+    mix-blend-mode:screen;
+    /* Fondu bas pour intégration naturelle */
+    -webkit-mask-image:linear-gradient(to bottom, black 55%, transparent 95%);
+    mask-image:linear-gradient(to bottom, black 55%, transparent 95%);
+    filter:brightness(1.1) contrast(1.05);
 }
 
-/* Cadre décoratif autour de la photo */
-.hero-photo-outline {
-    position:absolute;
-    top:8%; left:50%;
-    transform:translateX(-50%);
-    width:55%; height:70%;
-    border:1.5px solid rgba(255,255,255,.18);
-    border-radius:8px;
-    pointer-events:none;
-    z-index:-1;
-}
+/* Cadre décoratif supprimé */
 /* ── NOM + ÉCOLE en haut à gauche ── */
 .hero-top-left {
     position:absolute;
@@ -321,12 +308,12 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
 
 /* ── Responsive hero ── */
 @media(max-width:1200px) {
-    .hero-bg-word { font-size:clamp(6rem, 15vw, 14rem); }
-    .hero-photo-center { width:clamp(300px, 36vw, 480px); }
+    .hero-bg-word { font-size:clamp(8rem, 20vw, 20rem); }
+    .hero-photo-center { width:clamp(280px, 34vw, 460px); }
 }
 @media(max-width:768px) {
-    .hero-bg-word { font-size:clamp(4.5rem, 13vw, 9rem); letter-spacing:-.02em; }
-    .hero-photo-center { width:clamp(220px, 55vw, 360px); transform:translate(-50%, -35%); }
+    .hero-bg-word { font-size:clamp(5.5rem, 16vw, 11rem); }
+    .hero-photo-center { width:clamp(220px, 50vw, 340px); transform:translate(-50%, -28%); }
     .hero-bottom-left { bottom:7rem; left:1.2rem; max-width:calc(100vw - 90px); }
     .hero-top-left { top:1.5rem; left:1.2rem; }
     .hero-right-icons { right:1rem; gap:1rem; }
@@ -337,8 +324,8 @@ body { font-family:'Inter','Segoe UI',system-ui,sans-serif; background:var(--bg)
     .btn-prim,.btn-ghost,.btn-cv { font-size:.82rem; padding:.65rem 1.3rem; }
 }
 @media(max-width:480px) {
-    .hero-bg-word { font-size:clamp(3.5rem, 14vw, 6rem); }
-    .hero-photo-center { width:clamp(180px, 60vw, 280px); }
+    .hero-bg-word { font-size:clamp(4rem, 18vw, 7rem); }
+    .hero-photo-center { width:clamp(180px, 55vw, 260px); }
     .hero-stats-bar { display:none; }
     .hero-bottom-left { bottom:5.5rem; }
 }
