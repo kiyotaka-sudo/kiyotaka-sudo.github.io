@@ -187,21 +187,24 @@ html.lenis { height:auto; }
     text-transform:uppercase;
 }
 
-/* PHOTO T.jpg — au centre, par-dessus le mot */
+/* PHOTO au centre, par-dessus le mot */
 .hero-photo-center {
     position:absolute;
-    bottom:0; left:50%;
-    transform:translateX(-50%);
+    top:50%; left:50%;
+    transform:translate(-50%, -35%);
     z-index:10;
-    width:clamp(300px, 34vw, 500px);
+    width:clamp(320px, 36vw, 520px);
     pointer-events:none;
 }
+
 .hero-center-img {
     width:100%; display:block;
     object-fit:cover; object-position:center top;
-    -webkit-mask-image:linear-gradient(to bottom, black 60%, transparent 96%);
-    mask-image:linear-gradient(to bottom, black 60%, transparent 96%);
-    filter:contrast(1.05) brightness(1.02);
+    /* lighten : fond noir de 4.jpg disparaît sur fond sombre */
+    mix-blend-mode:lighten;
+    -webkit-mask-image:linear-gradient(to bottom, black 55%, transparent 95%);
+    mask-image:linear-gradient(to bottom, black 55%, transparent 95%);
+    filter:contrast(1.15) brightness(1.05) saturate(0.9);
 }
 
 /* INFO nom en haut à gauche */
