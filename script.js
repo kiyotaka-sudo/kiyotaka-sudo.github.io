@@ -105,6 +105,87 @@ function heroReveal() {
     }
 }
 
+/* ── 7. PORTRAIT DÉTOURAGE — Canvas background removal ──────── */
+/* Technique : on charge l'image sur canvas, on détecte la couleur
+   du fond (coin supérieur gauche), on rend transparent tout pixel
+   dont la distance de couleur est inférieure au seuil */
+(function initPortraitDetouring() {
+    const src = document.getElementById('portraitSrc');
+    const out = document.getElementById('portraitCanvas');
+    if (!src || !out) return;
+
+    function processImage() {
+        const w = src.naturalWidth  || src.width  || 600;
+        const h = src.naturalHeight || src.height || 800;
+
+        // Canvas de travail (hors DOM)
+        const tmp = document.createElement('canvas');
+        tmp.width = w; tmp.height = h;
+        const ctx = tmp.getContext('2d');
+        ctx.drawImage(src, 0, 0, w, h);
+
+        const data = ctx.getImageData(0, 0, w, h);
+        const px   = data.data;
+
+        // Couleur du fond : moyenne des 4 coins
+        function corner(x, y) {
+            const i = (y * w + x) * 4;
+            return [px[i], px[i+1], px[i+2]];
+        }
+        const corners = [corner(0,0), corner(w-1,0), corner(0,h-1), corner(w-1,h-1)];
+        const bgR = corners.reduce((s,c)=>s+c[0],0)/4;
+        const bgG = corners.reduce((s,c)=>s+c[1],0)/4;
+        const bgB = corners.reduce((s,c)=>s+c[2],0)/4;
+
+        // Seuil adaptatif : si fond clair (>160) → tolérance 55, sinon 45
+        const isBright = bgR > 160 || bgG > 160 || bgB > 160;
+        const THRESH   = isBright ? 58 : 48;
+        const FEATHER  = 18; // zone de transition douce
+
+        for (let i = 0; i < px.length; i += 4) {
+            const dr = px[i]   - bgR;
+            const dg = px[i+1] - bgG;
+            const db = px[i+2] - bgB;
+            const dist = Math.sqrt(dr*dr + dg*dg + db*db);
+
+            if (dist < THRESH) {
+                // Fond pur → transparent
+                px[i+3] = 0;
+            } else if (dist < THRESH + FEATHER) {
+                // Zone de transition → semi-transparent
+                const t = (dist - THRESH) / FEATHER;
+                px[i+3] = Math.round(t * px[i+3]);
+            }
+            // dist >= THRESH+FEATHER → pixel conservé tel quel
+        }
+
+        ctx.putImageData(data, 0, 0);
+
+        // Afficher sur le canvas de sortie
+        out.width  = w;
+        out.height = h;
+        const outCtx = out.getContext('2d');
+        outCtx.clearRect(0, 0, w, h);
+        outCtx.drawImage(tmp, 0, 0, w, h, 0, 0, w, h);
+    }
+
+    if (src.complete && src.naturalWidth > 0) {
+        processImage();
+    } else {
+        src.addEventListener('load', processImage);
+        // Fallback : si l'image ne charge pas (CORS local), afficher avec blend
+        src.addEventListener('error', () => {
+            src.style.display = 'block';
+            src.style.width   = '100%';
+            src.style.mixBlendMode = 'lighten';
+            src.style.filter  = 'contrast(1.3) brightness(1.1)';
+            src.style.webkitMaskImage = 'linear-gradient(to bottom, black 58%, transparent 96%)';
+            src.style.maskImage       = 'linear-gradient(to bottom, black 58%, transparent 96%)';
+            out.style.display = 'none';
+        });
+    }
+})();
+
 /* ── 7. WATER CANVAS WebGL ──────────────────────────────────── */
 (function initWater() {
     const canvas = document.getElementById('waterCanvas');
