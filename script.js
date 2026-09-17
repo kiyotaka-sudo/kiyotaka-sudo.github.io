@@ -269,56 +269,44 @@ function initGSAP() {
     });
 }
 
-/* ── 9. SCROLL REVEAL FALLBACK (sans GSAP) ──────────────────── */
+/* -- 9. SCROLL REVEAL simple et fiable -- */
 function initRevealFallback() {
-    /* Active body.ready pour que les transitions CSS s'activent */
-    requestAnimationFrame(() => document.body.classList.add('ready'));
-
-    const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (!e.isIntersecting) return;
-            e.target.classList.add('rv-done');
-            obs.unobserve(e.target);
-        });
-    }, { threshold: 0.06, rootMargin:'0px 0px -40px 0px' });
-
-    document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
-
-    /* Stagger delay sur les grilles */
-    document.querySelectorAll('.sk-card, .proj-card, .fact-card, .ci-item').forEach((el, i) => {
-        el.style.setProperty('--i', (i % 6).toString());
+    /* Stagger */
+    document.querySelectorAll(".sk-card,.proj-card,.fact-card,.ci-item").forEach((el,i)=>{
+        el.style.setProperty("--i",(i%6)+"");
     });
-
-    /* Skill bars sans GSAP */
-    const barObs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (!e.isIntersecting) return;
-            e.target.querySelectorAll('.sk-fill').forEach(b => {
-                setTimeout(() => { b.style.width = b.dataset.level + '%'; }, 200);
-            });
+    /* Rendre tout visible apres 100ms — fiable sur tous navigateurs */
+    setTimeout(()=>{
+        document.body.classList.add("ready");
+        document.querySelectorAll(".rv,.rv-clip,.rv-slide-left,.rv-slide-right").forEach(el=>{
+            el.classList.add("is-visible");
+        });
+        document.querySelectorAll("[data-reveal]").forEach(el=>{
+            el.classList.add("rv-done");
+        });
+    },100);
+    /* Animer skill bars */
+    const barObs=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+            if(!e.isIntersecting)return;
+            e.target.querySelectorAll(".sk-fill").forEach(b=>{b.style.width=b.dataset.level+"%";});
             barObs.unobserve(e.target);
         });
-    }, { threshold:.1 });
-    document.querySelectorAll('.sk-grid').forEach(g => barObs.observe(g));
-
+    },{threshold:.02});
+    document.querySelectorAll(".sk-grid").forEach(g=>barObs.observe(g));
     /* Compteurs */
-    const cntObs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-            if (!e.isIntersecting) return;
-            e.target.querySelectorAll('[data-count]').forEach(num => {
-                const target = +num.dataset.count, dur = 1400;
-                const start = performance.now();
-                (function run(now){
-                    const p = Math.min((now-start)/dur,1);
-                    num.textContent = Math.round((1-Math.pow(1-p,3))*target);
-                    if(p<1) requestAnimationFrame(run);
-                })(start);
+    const cntObs=new IntersectionObserver(entries=>{
+        entries.forEach(e=>{
+            if(!e.isIntersecting)return;
+            e.target.querySelectorAll("[data-count]").forEach(num=>{
+                const t=+num.dataset.count,dur=1400,s=performance.now();
+                (function r(n){const p=Math.min((n-s)/dur,1);num.textContent=Math.round((1-Math.pow(1-p,3))*t);if(p<1)requestAnimationFrame(r);})(s);
             });
             cntObs.unobserve(e.target);
         });
-    }, { threshold:.5 });
-    const stats = document.querySelector('.hero-stats-bar');
-    if (stats) cntObs.observe(stats);
+    },{threshold:.3});
+    const stats=document.querySelector('.hero-stats-bar');
+    if(stats)cntObs.observe(stats);
 }
 
 /* ── 10. HERO PARALLAX souris ───────────────────────────────── */

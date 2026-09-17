@@ -512,35 +512,26 @@ html.lenis { height:auto; }
 .footer-copy { width:var(--max); margin:0 auto; padding:0 1rem; text-align:center; font-size:.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
 
 /* ── SCROLL REVEAL ────────────────────────────────────────────── */
-/* État initial — invisible */
-.rv, .rv-slide-left, .rv-slide-right, .rv-clip {
-    transition-duration: .001ms; /* désactivé jusqu'à ce que la page soit prête */
-}
+/* Simple et fiable : tout est visible, animation ajoutée quand body.ready */
+.rv, .rv-clip, .rv-slide-left, .rv-slide-right { transition:none; }
+
 body.ready .rv {
     opacity:0; transform:translateY(28px);
-    transition:opacity .65s ease calc(var(--i,0)*70ms),
-               transform .65s var(--ease2) calc(var(--i,0)*70ms);
+    transition:opacity .65s ease calc(var(--i,0)*70ms), transform .65s var(--ease2) calc(var(--i,0)*70ms);
 }
-body.ready .rv-slide-left {
-    opacity:0; transform:translateX(-40px);
-    transition:opacity .75s var(--ease2) calc(var(--i,0)*70ms),
-               transform .75s var(--ease2) calc(var(--i,0)*70ms);
-}
-body.ready .rv-slide-right {
-    opacity:0; transform:translateX(40px);
-    transition:opacity .75s var(--ease2) calc(var(--i,0)*70ms),
-               transform .75s var(--ease2) calc(var(--i,0)*70ms);
-}
-body.ready .rv-clip {
-    clip-path:polygon(0 105%,100% 105%,100% 105%,0 105%); opacity:0;
-    transition:clip-path .85s var(--ease2) calc(var(--i,0)*70ms),
-               opacity .85s ease calc(var(--i,0)*70ms);
-}
-/* Revealed */
-[data-reveal].rv-done .rv              { opacity:1; transform:translateY(0); }
-[data-reveal].rv-done .rv-slide-left   { opacity:1; transform:translateX(0); }
-[data-reveal].rv-done .rv-slide-right  { opacity:1; transform:translateX(0); }
-[data-reveal].rv-done .rv-clip        { clip-path:polygon(0 0,100% 0,100% 100%,0 100%); opacity:1; }
+body.ready .rv-slide-left  { opacity:0; transform:translateX(-40px); transition:opacity .75s var(--ease2) calc(var(--i,0)*70ms), transform .75s var(--ease2) calc(var(--i,0)*70ms); }
+body.ready .rv-slide-right { opacity:0; transform:translateX(40px);  transition:opacity .75s var(--ease2) calc(var(--i,0)*70ms), transform .75s var(--ease2) calc(var(--i,0)*70ms); }
+body.ready .rv-clip        { clip-path:polygon(0 105%,100% 105%,100% 105%,0 105%); opacity:0; transition:clip-path .85s var(--ease2) calc(var(--i,0)*70ms), opacity .85s ease calc(var(--i,0)*70ms); }
+
+/* Revealed via JS (class is-visible) */
+.rv.is-visible, body.ready .rv.is-visible              { opacity:1 !important; transform:translateY(0) !important; }
+.rv-slide-left.is-visible                              { opacity:1 !important; transform:translateX(0) !important; }
+.rv-slide-right.is-visible                             { opacity:1 !important; transform:translateX(0) !important; }
+.rv-clip.is-visible                                    { clip-path:polygon(0 0,100% 0,100% 100%,0 100%) !important; opacity:1 !important; }
+[data-reveal].rv-done .rv                              { opacity:1; transform:translateY(0); }
+[data-reveal].rv-done .rv-slide-left                   { opacity:1; transform:translateX(0); }
+[data-reveal].rv-done .rv-slide-right                  { opacity:1; transform:translateX(0); }
+[data-reveal].rv-done .rv-clip                         { clip-path:polygon(0 0,100% 0,100% 100%,0 100%); opacity:1; }
 
 /* ── TILT reflet ──────────────────────────────────────────────── */
 .tilt { --lx:50%; --ly:50%; }
