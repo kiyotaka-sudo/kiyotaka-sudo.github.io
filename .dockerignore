@@ -1,0 +1,7 @@
+node_modules/
+.git/
+.vscode/
+*.md
+!README.md
+.gitignore
+check_sizes.ps1
