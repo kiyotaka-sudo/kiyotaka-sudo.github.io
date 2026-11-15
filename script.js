@@ -1,4 +1,4 @@
-﻿/* ================================================================
+/* ================================================================
    ERNEST MBARGA — PORTFOLIO
    Lenis smooth scroll + GSAP ScrollTrigger
    Thème DIMENSIO × BETA_motors
@@ -105,147 +105,154 @@ function heroReveal() {
     }
 }
 
-/* ── 7. PORTRAIT DÉTOURAGE — Canvas background removal ──────── */
-/* Technique : on charge l'image sur canvas, on détecte la couleur
-   du fond (coin supérieur gauche), on rend transparent tout pixel
-   dont la distance de couleur est inférieure au seuil */
-(function initPortraitDetouring() {
-    const src = document.getElementById('portraitSrc');
-    const out = document.getElementById('portraitCanvas');
-    if (!src || !out) return;
-
-    function processImage() {
-        const w = src.naturalWidth  || src.width  || 600;
-        const h = src.naturalHeight || src.height || 800;
-
-        // Canvas de travail (hors DOM)
-        const tmp = document.createElement('canvas');
-        tmp.width = w; tmp.height = h;
-        const ctx = tmp.getContext('2d');
-        ctx.drawImage(src, 0, 0, w, h);
-
-        const data = ctx.getImageData(0, 0, w, h);
-        const px   = data.data;
-
-        // Couleur du fond : moyenne des 4 coins
-        function corner(x, y) {
-            const i = (y * w + x) * 4;
-            return [px[i], px[i+1], px[i+2]];
-        }
-        const corners = [corner(0,0), corner(w-1,0), corner(0,h-1), corner(w-1,h-1)];
-        const bgR = corners.reduce((s,c)=>s+c[0],0)/4;
-        const bgG = corners.reduce((s,c)=>s+c[1],0)/4;
-        const bgB = corners.reduce((s,c)=>s+c[2],0)/4;
-
-        // Seuil adaptatif : si fond clair (>160) → tolérance 55, sinon 45
-        const isBright = bgR > 160 || bgG > 160 || bgB > 160;
-        const THRESH   = isBright ? 58 : 48;
-        const FEATHER  = 18; // zone de transition douce
-
-        for (let i = 0; i < px.length; i += 4) {
-            const dr = px[i]   - bgR;
-            const dg = px[i+1] - bgG;
-            const db = px[i+2] - bgB;
-            const dist = Math.sqrt(dr*dr + dg*dg + db*db);
-
-            if (dist < THRESH) {
-                // Fond pur → transparent
-                px[i+3] = 0;
-            } else if (dist < THRESH + FEATHER) {
-                // Zone de transition → semi-transparent
-                const t = (dist - THRESH) / FEATHER;
-                px[i+3] = Math.round(t * px[i+3]);
-            }
-            // dist >= THRESH+FEATHER → pixel conservé tel quel
-        }
-
-        ctx.putImageData(data, 0, 0);
-
-        // Afficher sur le canvas de sortie
-        out.width  = w;
-        out.height = h;
-        const outCtx = out.getContext('2d');
-        outCtx.clearRect(0, 0, w, h);
-        outCtx.drawImage(tmp, 0, 0, w, h, 0, 0, w, h);
-    }
-
-    if (src.complete && src.naturalWidth > 0) {
-        processImage();
-    } else {
-        src.addEventListener('load', processImage);
-        // Fallback : si l'image ne charge pas (CORS local), afficher avec blend
-        src.addEventListener('error', () => {
-            src.style.display = 'block';
-            src.style.width   = '100%';
-            src.style.mixBlendMode = 'lighten';
-            src.style.filter  = 'contrast(1.3) brightness(1.1)';
-            src.style.webkitMaskImage = 'linear-gradient(to bottom, black 58%, transparent 96%)';
-            src.style.maskImage       = 'linear-gradient(to bottom, black 58%, transparent 96%)';
-            out.style.display = 'none';
-        });
-    }
-})();
-
-/* ── 7. WATER CANVAS WebGL ──────────────────────────────────── */
+/* ── 7. WATER CANVAS WebGL — Supplanté par l'expérience WebGL 3D complète Three.js ── */
 (function initWater() {
     const canvas = document.getElementById('waterCanvas');
-    if (!canvas) return;
-    const gl = canvas.getContext('webgl', { alpha:false, antialias:false });
-    if (!gl) { canvas.style.display='none'; return; }
-
-    const VS = `attribute vec2 p;varying vec2 uv;void main(){uv=p*.5+.5;gl_Position=vec4(p,0,1);}`;
-    const FS = `
-precision mediump float;
-varying vec2 uv; uniform float t; uniform vec2 mouse; uniform vec2 res;
-float h(vec2 p){p=fract(p*vec2(443.9,397.3));p+=dot(p,p+19.2);return fract(p.x*p.y);}
-float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-float fbm(vec2 p){float v=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<4;i++){v+=a*n(p);p=m*p;a*=.5;}return v;}
-void main(){
-    float ar=res.x/res.y; vec2 st=uv;
-    float tt=t*.25;
-    vec2 d=vec2(fbm(st*2.8+vec2(tt*.6,tt*.4))*.015,fbm(st*2.8+vec2(tt*.4+3.,tt*.5))*.015);
-    vec2 mp=vec2(mouse.x,1.-mouse.y);
-    vec2 dm=(st-mp)*vec2(ar,1.); float rd=length(dm);
-    float rpl=sin(rd*32.-t*6.)*.012*smoothstep(.55,.0,rd)*smoothstep(.0,.05,rd);
-    d+=normalize(dm+.001)*rpl;
-    vec2 dst=st+d;
-    /* Palette DIMENSIO : quasi-noir avec accent vert-gris très subtil */
-    vec3 deep=vec3(.02,.024,.024);
-    vec3 mid=vec3(.04,.055,.05);
-    vec3 hi=vec3(.65,.72,.69);
-    float depth=smoothstep(.0,1.,dst.y+fbm(dst*3.+tt*.3)*.1);
-    vec3 col=mix(deep,mid,depth);
-    float c=pow(fbm(dst*5.+tt*.7)*fbm(dst*8.-tt*.4+2.),2.)*0.14;
-    col+=hi*c;
-    col+=vec3(.5,.62,.58)*.12*smoothstep(.5,.0,rd);
-    float v=1.-smoothstep(.3,1.2,length((uv-.5)*vec2(ar,1.)*.85));
-    col*=v*.9+.1;
-    gl_FragColor=vec4(col,1.);
-}`;
-    function mk(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
-    const prog=gl.createProgram();
-    gl.attachShader(prog,mk(gl.VERTEX_SHADER,VS));
-    gl.attachShader(prog,mk(gl.FRAGMENT_SHADER,FS));
-    gl.linkProgram(prog); gl.useProgram(prog);
-    const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
-    const ap=gl.getAttribLocation(prog,'p'); gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap,2,gl.FLOAT,false,0,0);
-    const uT=gl.getUniformLocation(prog,'t'),uM=gl.getUniformLocation(prog,'mouse'),uR=gl.getUniformLocation(prog,'res');
-    let tx=.5,ty=.5,gx=.5,gy=.5;
-    document.addEventListener('mousemove',e=>{tx=e.clientX/window.innerWidth;ty=e.clientY/window.innerHeight;});
-    function resize(){canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;gl.viewport(0,0,canvas.width,canvas.height);}
-    window.addEventListener('resize',resize,{passive:true}); resize();
-    (function frame(ts){
-        gx+=(tx-gx)*.04; gy+=(ty-gy)*.04;
-        gl.uniform1f(uT,(ts||0)*.001); gl.uniform2f(uM,gx,gy); gl.uniform2f(uR,canvas.width,canvas.height);
-        gl.drawArrays(gl.TRIANGLES,0,6); requestAnimationFrame(frame);
-    })();
+    if (canvas) canvas.style.display = 'none';
 })();
 
-/* ── 8. GSAP SCROLL ANIMATIONS ──────────────────────────────── */
+/* ── 8. CHAMP IMMERSIF — réseau Canvas lié au scroll ──────── */
+function initImmersiveExperience() {
+    const backdrop = document.querySelector('.immersive-backdrop');
+    const canvas = document.getElementById('fieldCanvas');
+    const scenes = Array.from(document.querySelectorAll('[data-scene]'));
+    if (!backdrop || !canvas || !scenes.length) return;
+
+    const ctx = canvas.getContext('2d', { alpha:true });
+    if (!ctx) return;
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const palettes = {
+        hero:[232,220,200],
+        profile:[166,184,178],
+        domains:[181,198,190],
+        projects:[232,220,200],
+        contact:[157,174,169]
+    };
+    const domainAccents = {
+        frontend:[166,184,178],
+        backend:[212,195,164],
+        devops:[152,177,172],
+        security:[190,166,159],
+        tools:[185,185,174]
+    };
+    const scanPositions = { hero:'24%', profile:'39%', domains:'55%', projects:'68%', contact:'81%' };
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let nodes = [];
+    let activeScene = 'hero';
+    let pointer = { x:.5, y:.5 };
+    let scrollRatio = 0;
+    let compact = false;
+
+    function buildNodes() {
+        const count = compact ? 22 : 46;
+        nodes = Array.from({ length:count }, (_, index) => ({
+            x:(Math.sin(index * 71.37) * .5 + .5) * width,
+            y:(Math.sin(index * 29.91 + 1.7) * .5 + .5) * height,
+            phase:index * .73,
+            size:index % 7 === 0 ? 1.9 : 1.1
+        }));
+    }
+
+    function resize() {
+        compact = window.matchMedia('(max-width:768px)').matches;
+        dpr = Math.min(window.devicePixelRatio || 1, compact ? 1.15 : 1.5);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        buildNodes();
+    }
+
+    function setScene(name) {
+        if (!palettes[name]) return;
+        activeScene = name;
+        document.body.dataset.immersiveScene = name;
+        backdrop.style.setProperty('--scan-y', scanPositions[name]);
+        scenes.forEach(scene => scene.classList.toggle('scene-active', scene.dataset.scene === name));
+    }
+
+    function render(time) {
+        ctx.clearRect(0, 0, width, height);
+        const activeDomain = document.body.dataset.activeDomain;
+        const color = domainAccents[activeDomain] || palettes[activeScene];
+        const movement = reducedMotion ? 0 : time * .00016;
+        const spread = compact ? 108 : 170;
+        const drift = compact ? 5 : 12;
+
+        const points = nodes.map(node => {
+            const x = node.x + Math.sin(node.phase + movement + scrollRatio * 7) * drift
+                + (pointer.x - .5) * (compact ? 5 : 18);
+            const y = node.y + Math.cos(node.phase * 1.4 + movement + scrollRatio * 6) * drift
+                + (pointer.y - .5) * (compact ? 4 : 13);
+            return { ...node, x, y };
+        });
+
+        ctx.lineWidth = 1;
+        for (let i = 0; i < points.length; i += 1) {
+            for (let j = i + 1; j < points.length; j += 1) {
+                const dx = points[i].x - points[j].x;
+                const dy = points[i].y - points[j].y;
+                const distance = Math.hypot(dx, dy);
+                if (distance > spread) continue;
+                const alpha = (1 - distance / spread) * (compact ? .09 : .13);
+                ctx.strokeStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+                ctx.beginPath();
+                ctx.moveTo(points[i].x, points[i].y);
+                ctx.lineTo(points[j].x, points[j].y);
+                ctx.stroke();
+            }
+        }
+
+        points.forEach(point => {
+            const alpha = point.size > 1.5 ? .42 : .24;
+            ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+            ctx.beginPath();
+            ctx.arc(point.x, point.y, point.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        if (!reducedMotion) requestAnimationFrame(render);
+    }
+
+    const observer = new IntersectionObserver(entries => {
+        const visible = entries
+            .filter(entry => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setScene(visible.target.dataset.scene);
+    }, { threshold:[.18, .45, .7] });
+    scenes.forEach(scene => observer.observe(scene));
+
+    document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            document.body.dataset.activeDomain = button.dataset.tab;
+            setScene('domains');
+        });
+    });
+
+    window.addEventListener('pointermove', event => {
+        pointer.x = event.clientX / Math.max(width, 1);
+        pointer.y = event.clientY / Math.max(height, 1);
+    }, { passive:true });
+    window.addEventListener('scroll', () => {
+        const maxScroll = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+        scrollRatio = window.scrollY / maxScroll;
+    }, { passive:true });
+    window.addEventListener('resize', resize, { passive:true });
+
+    resize();
+    setScene('hero');
+    render(0);
+}
+
+/* ── 9. GSAP SCROLL ANIMATIONS ──────────────────────────────── */
 function initGSAP() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* Chaque section panel entre avec un fadeUp */
     gsap.utils.toArray('[data-reveal]').forEach(section => {
@@ -305,24 +312,58 @@ function initGSAP() {
         });
     }
 
-    /* Titre hero PORTFOLIO — parallax vertical au scroll */
+    /* Hero : la typographie se retire pendant que le portrait ouvre la suite. */
     const bgWord = document.querySelector('.hero-bg-word');
     if (bgWord) {
         gsap.to(bgWord, {
-            yPercent:-18,
+            yPercent:-28,
+            scale:.88,
+            opacity:.48,
             ease:'none',
             scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true }
         });
     }
 
-    /* Photo hero — monte plus vite que le fond */
+    /* Le portrait conserve le premier plan puis laisse entrer le profil. */
     const heroPic = document.querySelector('.hero-photo-center');
     if (heroPic) {
         gsap.to(heroPic, {
-            yPercent:-12,
+            yPercent:-20,
+            scale:.94,
+            opacity:.34,
             ease:'none',
             scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true }
         });
+    }
+
+    if (!reducedMotion) {
+        const heroDetails = document.querySelectorAll('.hero-top-left, .hero-bottom-left, .hero-right-icons, .hero-stats-bar');
+        if (heroDetails.length) {
+            gsap.to(heroDetails, {
+                yPercent:-12,
+                opacity:.24,
+                ease:'none',
+                scrollTrigger:{ trigger:'.hero', start:'18% top', end:'bottom top', scrub:true }
+            });
+        }
+
+        const skillsPanel = document.querySelector('.s-skills .panel');
+        if (skillsPanel) {
+            gsap.fromTo(skillsPanel, { y:36 }, {
+                y:-18,
+                ease:'none',
+                scrollTrigger:{ trigger:'.s-skills', start:'top bottom', end:'bottom top', scrub:true }
+            });
+        }
+
+        const projectsPanel = document.querySelector('.s-projects .panel');
+        if (projectsPanel) {
+            gsap.fromTo(projectsPanel, { y:28 }, {
+                y:-14,
+                ease:'none',
+                scrollTrigger:{ trigger:'.s-projects', start:'top bottom', end:'bottom top', scrub:true }
+            });
+        }
     }
 
     /* Skill bars */
@@ -350,7 +391,7 @@ function initGSAP() {
     });
 }
 
-/* -- 9. SCROLL REVEAL simple et fiable -- */
+/* -- 10. SCROLL REVEAL simple et fiable -- */
 function initRevealFallback() {
     /* Stagger */
     document.querySelectorAll(".sk-card,.proj-card,.fact-card,.ci-item").forEach((el,i)=>{
@@ -597,6 +638,7 @@ function initTranslation() {
 /* ── INIT ALL ───────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
     initLenis();
+    initImmersiveExperience();
     initRevealFallback(); /* CSS fallback immédiat */
     initHeroParallax();
     initTilt();
@@ -606,14 +648,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initForm();
     initTranslation();
 
-    /* GSAP après chargement CDN (async) */
-    if (typeof gsap !== 'undefined') {
-        initGSAP();
-    } else {
-        window.addEventListener('load', () => {
+    /* Les animations de scroll démarrent après le reveal initial du hero. */
+    window.addEventListener('load', () => {
+        setTimeout(() => {
             if (typeof gsap !== 'undefined') initGSAP();
-        });
-    }
+        }, 1900);
+    });
 
     /* Première tab bars */
     setTimeout(()=>{

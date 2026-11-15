@@ -1,4 +1,9 @@
 .vscode/
-*.md
-README.md
+node_modules/
 .git/
+check_sizes.ps1
+test_local.sh
+ASSET_LICENSES.md
+ASSET_MANIFEST.json
+ASSET_SOURCES.md
+PORTFOLIO_IMMERSIVE_STORYBOARD.md

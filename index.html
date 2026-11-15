@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -10,6 +10,15 @@
     <!-- GSAP + ScrollTrigger -->
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <!-- Three.js Importmap -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
 </head>
 <body>
 
@@ -31,6 +40,12 @@
             </linearGradient>
         </defs>
     </svg>
+</div>
+
+<!-- Couche immersive 3D globale -->
+<div class="immersive-backdrop" aria-hidden="true">
+    <canvas id="webglCanvas"></canvas>
+    <div class="scan-beam"></div>
 </div>
 
 <!-- Navbar -->
@@ -74,25 +89,27 @@
 <!-- ================================================
      HERO — Style PORTFOLIO full-screen
      ================================================ -->
-<section id="hero" class="hero">
+<section id="hero" class="hero" data-scene="hero">
     <canvas id="waterCanvas"></canvas>
 
     <!-- Mot PORTFOLIO en arrière-plan -->
     <div class="hero-bg-word" aria-hidden="true">PORTFOLIO</div>
 
     <!-- Photo au centre, passe par-dessus le texte -->
-    <div class="hero-photo-center h-fade" style="--i:1">
-        <img src="img/4.jpg" alt="Ernest Mbarga" class="hero-center-img" id="portraitSrc" crossorigin="anonymous">
-        <canvas id="portraitCanvas"></canvas>
+    <div class="hero-photo-center">
+        <picture>
+            <source srcset="img/ernest-hero-cutout.webp" type="image/webp">
+            <img src="img/ernest-hero-cutout.png" alt="Ernest Mbarga" class="hero-center-img" id="portraitSrc">
+        </picture>
     </div>
 
     <!-- Contenu bas gauche -->
-    <div class="hero-bottom-left h-fade" style="--i:2">
+    <div class="hero-bottom-left">
         <div class="hero-role-tag">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
             <span id="typedText"></span><span class="caret"></span>
         </div>
-        <div class="hero-actions h-fade" style="--i:3">
+        <div class="hero-actions">
             <a href="#projects" class="btn-prim mag"><span data-key="btn-projects">Voir mes projets</span></a>
             <a href="#contact"  class="btn-ghost mag"><span data-key="btn-contact">Me contacter</span></a>
             <a href="CV_MBARGA_ERNEST.pdf" download="CV_MBARGA_ERNEST.pdf" class="btn-cv mag">
@@ -103,7 +120,7 @@
     </div>
 
     <!-- Nom + badge en haut à gauche -->
-    <div class="hero-top-left h-fade" style="--i:0">
+    <div class="hero-top-left">
         <div class="hero-name-block">
             <span class="hero-initials">EM</span>
             <div>
@@ -114,7 +131,7 @@
     </div>
 
     <!-- Icônes domaines à droite -->
-    <div class="hero-right-icons h-fade" style="--i:2">
+    <div class="hero-right-icons">
         <div class="hri-item" title="Développement Web">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
@@ -130,7 +147,7 @@
     </div>
 
     <!-- Stats en bas -->
-    <div class="hero-stats-bar h-fade" style="--i:4">
+    <div class="hero-stats-bar">
         <div class="hs-item">
             <b class="hs-n" data-count="20">0</b><span class="hs-plus">+</span>
             <span class="hs-lbl"><span data-key="stat-projects">Projets</span></span>
@@ -157,7 +174,7 @@
 <!-- ================================================
      ABOUT
      ================================================ -->
-<section id="about" class="s-about">
+<section id="about" class="s-about" data-scene="profile">
     <div class="panel" data-reveal>
         <p class="sec-tag rv" style="--i:0"><span data-key="sec-about">À propos</span></p>
         <div class="about-grid">
@@ -185,7 +202,7 @@
 
             <div class="about-right">
                 <h2 class="about-h rv-clip" style="--i:1"><span data-key="about-h">Bonjour, je suis Ernest.</span></h2>
-                <p class="about-p rv" style="--i:2"><span data-key="about-p1">
+                <p class="about-p rv" style="--i:2"><span data-key="about-p1">Étudiant en <strong>Cybersécurité (B2)</strong> à KEYCE Informatique Yaoundé, je construis des solutions digitales complètes : du frontend au backend, infrastructure cloud et sécurité offensive.</span></p>
                 <p class="about-p rv" style="--i:3"><span data-key="about-p2">Mes projets couvrent des apps mobiles React Native, des APIs Spring Boot, du Docker Swarm, des labs d'attaque Kali Linux et des topologies réseau Cisco. J'aime la complexité et je livre des résultats.</span></p>
                 <div class="fact-grid rv" style="--i:4">
                     <div class="fact-card tilt" style="--i:0">
@@ -224,7 +241,7 @@
 <!-- ================================================
      SKILLS
      ================================================ -->
-<section id="skills" class="s-skills">
+<section id="skills" class="s-skills" data-scene="domains">
     <div class="panel" data-reveal>
         <p class="sec-tag rv" style="--i:0"><span data-key="sec-skills">Compétences</span></p>
         <h2 class="sec-h rv-clip" style="--i:1"><span data-key="skills-h">Mon stack technique</span></h2>
@@ -307,7 +324,7 @@
 <!-- ================================================
      PROJECTS
      ================================================ -->
-<section id="projects" class="s-projects">
+<section id="projects" class="s-projects" data-scene="projects">
     <div class="panel" data-reveal>
         <p class="sec-tag rv" style="--i:0"><span data-key="sec-projects">Projets</span></p>
         <h2 class="sec-h rv-clip" style="--i:1"><span data-key="projects-h">Mes réalisations</span></h2>
@@ -475,7 +492,7 @@
         </div>
 
         <div class="proj-more">
-            <a href="https://github.com/kiyotaka-sudo" target="_blank" class="btn-ghost"><span data-key="btn-more">Voir tous les projets sur GitHub</span> les projets sur GitHub
+            <a href="https://github.com/kiyotaka-sudo" target="_blank" class="btn-ghost"><span data-key="btn-more">Voir tous les projets sur GitHub</span>
             </a>
         </div>
     </div>
@@ -484,13 +501,13 @@
 <!-- ================================================
      CONTACT
      ================================================ -->
-<section id="contact" class="s-contact">
+<section id="contact" class="s-contact" data-scene="contact">
     <div class="panel" data-reveal>
         <p class="sec-tag rv" style="--i:0"><span data-key="sec-contact">Contact</span></p>
         <h2 class="sec-h rv-clip" style="--i:1"><span data-key="contact-h">Travaillons ensemble</span></h2>
         <div class="contact-grid">
             <div class="contact-left rv-slide-left" style="--i:2">
-                <p class="contact-intro"><span data-key="contact-intro">Vous avez un projet, une opportunité de stage ou simplement envie d'échanger ? Je suis ouvert à toute discussion.</span>
+                <p class="contact-intro"><span data-key="contact-intro">Vous avez un projet, une opportunité de stage ou simplement envie d'échanger ? Je suis ouvert à toute discussion.</span></p>
                 <a href="CV_MBARGA_ERNEST.pdf" download="CV_MBARGA_ERNEST.pdf" class="btn-cv btn-cv--full">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Télécharger mon CV
@@ -556,6 +573,7 @@
     <div class="progress-track"><i class="progress-track-fill"></i></div>
 </div>
 
+<script type="module" src="js/webgl-app.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
