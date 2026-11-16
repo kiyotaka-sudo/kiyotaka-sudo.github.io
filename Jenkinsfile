@@ -1,17 +1,12 @@
 // =====================================================
 // PROJET FINAL CICD — MBARGA Ernest — B3 DevOps
-// Chaîne complète : Git → Build → Test → Push → Deploy
+// Chaîne complète : Git → Build → Test → Push → Staging → Validation → Prod → K8s
 // =====================================================
 pipeline {
     agent any
 
-    parameters {
-        string(name: 'DOCKERHUB_ID', defaultValue: 'mbargaernest', description: 'Docker Hub ID')
-        booleanParam(name: 'DEPLOY_PROD', defaultValue: true, description: 'Déployer en production après staging')
-    }
-
     environment {
-        IMAGE          = "${params.DOCKERHUB_ID}/mbarga-portfolio"
+        IMAGE          = "mbargaernest/mbarga-portfolio"
         VERSION        = "2.0.${env.BUILD_NUMBER}"
         TEST_CONTAINER = "cicd-test-${env.BUILD_NUMBER}"
         STAGING_PORT   = "8091"
@@ -27,7 +22,7 @@ pipeline {
 
     stages {
 
-        // ── STAGE 1 : Build de l'image ──────────────────
+        // ── STAGE 1 : Build ─────────────────────────────
         stage('Build image') {
             steps {
                 sh '''
@@ -50,21 +45,24 @@ pipeline {
                     echo "Date    : $(date)"    >> reports/rapport-cicd.txt
                     echo "Build   : #$BUILD_NUMBER" >> reports/rapport-cicd.txt
                     echo "Image   : $IMAGE:$VERSION" >> reports/rapport-cicd.txt
-                    echo ""                     >> reports/rapport-cicd.txt
+                    echo "" >> reports/rapport-cicd.txt
 
                     docker exec $TEST_CONTAINER wget -qO- http://localhost:3000/ > /dev/null \
                       && echo "PASS : HTTP 200" | tee -a reports/rapport-cicd.txt
+
                     docker exec $TEST_CONTAINER wget -qO- http://localhost:3000/ | grep -i "Ernest" > /dev/null \
                       && echo "PASS : Titre Ernest" | tee -a reports/rapport-cicd.txt
+
                     docker exec $TEST_CONTAINER wget -qO- http://localhost:3000/ | grep "mbargaernest80@gmail.com" > /dev/null \
-                      && echo "PASS : Email présent" | tee -a reports/rapport-cicd.txt
+                      && echo "PASS : Email present" | tee -a reports/rapport-cicd.txt
 
                     echo "=== TOUS LES TESTS PASSES ===" | tee -a reports/rapport-cicd.txt
+                    cat reports/rapport-cicd.txt
                 '''
             }
         }
 
-        // ── STAGE 3 : Push sur Docker Hub ───────────────
+        // ── STAGE 3 : Push Docker Hub ───────────────────
         stage('Push Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
@@ -76,13 +74,14 @@ pipeline {
                         echo "$DH_TOKEN" | docker login -u "$DH_USER" --password-stdin
                         docker push $IMAGE:$VERSION
                         docker push $IMAGE:latest
-                        echo "✅ Image poussée : $IMAGE:$VERSION"
+                        echo "Image poussee : $IMAGE:$VERSION"
+                        docker logout
                     '''
                 }
             }
         }
 
-        // ── STAGE 4 : Déploiement Staging ───────────────
+        // ── STAGE 4 : Deploy Staging ────────────────────
         stage('Deploy Staging') {
             steps {
                 sh '''
@@ -93,66 +92,58 @@ pipeline {
                         $IMAGE:$VERSION
                     sleep 4
                     docker exec portfolio-staging wget -qO- http://localhost:3000/ | grep -i "Ernest" > /dev/null
-                    echo "✅ Staging opérationnel sur http://localhost:$STAGING_PORT"
+                    echo "Staging OK sur http://localhost:$STAGING_PORT (version $VERSION)"
                 '''
             }
         }
 
         // ── STAGE 5 : Validation humaine ────────────────
         stage('Validation avant prod') {
-            when {
-                expression { params.DEPLOY_PROD }
-            }
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
-                    input message: "Déployer la version ${VERSION} en PRODUCTION ?",
-                          ok: '🚀 Déployer en prod'
+                    input message: "Deployer la version ${VERSION} en PRODUCTION ?",
+                          ok: 'Deployer en prod'
                 }
             }
         }
 
-        // ── STAGE 6 : Déploiement Production ────────────
+        // ── STAGE 6 : Deploy Production ─────────────────
         stage('Deploy Production') {
-            when {
-                expression { params.DEPLOY_PROD }
-            }
             steps {
                 script {
-                    // Sauvegarder l'image précédente pour rollback
-                    env.PREVIOUS_IMAGE = sh(
+                    def previousImage = sh(
                         script: "docker inspect --format='{{.Config.Image}}' portfolio-prod 2>/dev/null || echo none",
                         returnStdout: true
                     ).trim()
 
                     try {
-                        sh '''
+                        sh """
                             docker rm -f portfolio-prod 2>/dev/null || true
-                            docker run -d --name portfolio-prod \
-                                -p $PROD_PORT:3000 \
-                                -e NODE_ENV=production \
-                                $IMAGE:$VERSION
+                            docker run -d --name portfolio-prod \\
+                                -p ${PROD_PORT}:3000 \\
+                                -e NODE_ENV=production \\
+                                ${IMAGE}:${VERSION}
                             sleep 4
                             docker exec portfolio-prod wget -qO- http://localhost:3000/ | grep -i "Ernest" > /dev/null
-                            echo "✅ Production opérationnelle sur http://localhost:$PROD_PORT"
-                        '''
+                            echo "Production OK sur http://localhost:${PROD_PORT} (version ${VERSION})"
+                        """
                     } catch (err) {
-                        // Rollback automatique
-                        if (env.PREVIOUS_IMAGE != 'none') {
+                        if (previousImage != 'none') {
                             sh """
-                                echo "❌ Échec — rollback vers ${env.PREVIOUS_IMAGE}"
+                                echo "ROLLBACK vers ${previousImage}"
                                 docker rm -f portfolio-prod 2>/dev/null || true
-                                docker run -d --name portfolio-prod \
-                                    -p ${PROD_PORT}:3000 \
-                                    ${env.PREVIOUS_IMAGE}
+                                docker run -d --name portfolio-prod \\
+                                    -p ${PROD_PORT}:3000 \\
+                                    ${previousImage}
                             """
                         }
-                        error "Déploiement prod échoué — rollback effectué"
+                        error "Deploy prod echoue — rollback effectue"
                     }
                 }
             }
         }
 
-        // ── STAGE 7 : Déploiement Kubernetes ────────────
+        // ── STAGE 7 : Deploy Kubernetes ─────────────────
         stage('Deploy Kubernetes') {
             steps {
                 sh '''
@@ -161,7 +152,7 @@ pipeline {
                     kubectl apply -f k8s/tp47/secret.yaml
                     kubectl apply -f k8s/tp47/deployment-with-config.yaml
                     kubectl rollout status deployment/portfolio-deployment -n production --timeout=120s
-                    echo "✅ Kubernetes production : déploiement réussi"
+                    echo "Kubernetes production OK"
                     kubectl get pods -n production
                 '''
             }
@@ -174,10 +165,10 @@ pipeline {
             archiveArtifacts artifacts: 'reports/rapport-cicd.txt', allowEmptyArchive: true
         }
         success {
-            echo "✅ Pipeline CICD complet — version ${VERSION} déployée en staging, prod et Kubernetes"
+            echo "PIPELINE CICD COMPLET — version ${VERSION} en staging, prod et Kubernetes"
         }
         failure {
-            echo "❌ Pipeline échoué — consultez la console"
+            echo "PIPELINE ECHOUE — consultez la console"
         }
     }
 }
