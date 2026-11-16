@@ -66,7 +66,6 @@ pipeline {
 
         // ── STAGE 3 : Push sur Docker Hub ───────────────
         stage('Push Docker Hub') {
-            when { branch 'main' }
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub',
@@ -85,7 +84,6 @@ pipeline {
 
         // ── STAGE 4 : Déploiement Staging ───────────────
         stage('Deploy Staging') {
-            when { branch 'main' }
             steps {
                 sh '''
                     docker rm -f portfolio-staging 2>/dev/null || true
@@ -103,10 +101,7 @@ pipeline {
         // ── STAGE 5 : Validation humaine ────────────────
         stage('Validation avant prod') {
             when {
-                allOf {
-                    branch 'main'
-                    expression { params.DEPLOY_PROD }
-                }
+                expression { params.DEPLOY_PROD }
             }
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
@@ -119,10 +114,7 @@ pipeline {
         // ── STAGE 6 : Déploiement Production ────────────
         stage('Deploy Production') {
             when {
-                allOf {
-                    branch 'main'
-                    expression { params.DEPLOY_PROD }
-                }
+                expression { params.DEPLOY_PROD }
             }
             steps {
                 script {
@@ -162,7 +154,6 @@ pipeline {
 
         // ── STAGE 7 : Déploiement Kubernetes ────────────
         stage('Deploy Kubernetes') {
-            when { branch 'main' }
             steps {
                 sh '''
                     kubectl apply -f k8s/tp47/namespace.yaml 2>/dev/null || true
