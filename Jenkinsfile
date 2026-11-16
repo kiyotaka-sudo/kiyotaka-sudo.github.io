@@ -66,7 +66,12 @@ pipeline {
         }
 
         stage('Push Docker Hub') {
-            when { expression { params.PUSH } }
+            when {
+                allOf {
+                    expression { params.PUSH }
+                    branch 'main'
+                }
+            }
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub',
