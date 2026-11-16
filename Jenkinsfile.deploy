@@ -1,0 +1,128 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME        = "mbargaernest/mbarga-portfolio"
+        IMAGE_TAG         = "latest"
+        CONTAINER_STAGING = "portfolio-staging"
+        CONTAINER_PROD    = "portfolio-prod"
+        PORT_STAGING      = "8091"
+        PORT_PROD         = "8092"
+    }
+
+    stages {
+
+        stage('Pull image') {
+            steps {
+                echo "📥 Pull de l'image ${IMAGE_NAME}:${IMAGE_TAG}..."
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                        echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+                        docker pull ${IMAGE_NAME}:${IMAGE_TAG}
+                        docker logout
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Staging') {
+            steps {
+                echo "🚧 Déploiement en staging sur le port ${PORT_STAGING}..."
+                sh """
+                    docker rm -f ${CONTAINER_STAGING} || true
+                    docker run -d \
+                        --name ${CONTAINER_STAGING} \
+                        -p ${PORT_STAGING}:3000 \
+                        --restart unless-stopped \
+                        ${IMAGE_NAME}:${IMAGE_TAG}
+                """
+            }
+        }
+
+        stage('Smoke Test Staging') {
+            steps {
+                echo '🧪 Smoke test staging...'
+                sh """
+                    sleep 5
+                    curl -f http://localhost:${PORT_STAGING} \
+                        || (docker logs ${CONTAINER_STAGING} && exit 1)
+                    echo "✅ Staging OK"
+                """
+            }
+            post {
+                failure {
+                    echo '❌ Smoke test staging échoué — rollback staging...'
+                    sh "docker rm -f ${CONTAINER_STAGING} || true"
+                }
+            }
+        }
+
+        stage('Validation humaine avant PROD') {
+            steps {
+                timeout(time: 15, unit: 'MINUTES') {
+                    input message: "✅ Staging validé sur http://localhost:${PORT_STAGING}. Déployer en PRODUCTION ?",
+                          ok: 'Déployer en prod'
+                }
+            }
+        }
+
+        stage('Deploy Production') {
+            steps {
+                echo "🚀 Déploiement en production sur le port ${PORT_PROD}..."
+                sh """
+                    docker rm -f ${CONTAINER_PROD} || true
+                    docker run -d \
+                        --name ${CONTAINER_PROD} \
+                        -p ${PORT_PROD}:3000 \
+                        --restart unless-stopped \
+                        ${IMAGE_NAME}:${IMAGE_TAG}
+                """
+            }
+        }
+
+        stage('Smoke Test Production') {
+            steps {
+                echo '🧪 Smoke test production...'
+                sh """
+                    sleep 5
+                    curl -f http://localhost:${PORT_PROD} \
+                        || (docker logs ${CONTAINER_PROD} && exit 1)
+                    echo "✅ Production OK"
+                """
+            }
+            post {
+                failure {
+                    echo '❌ Smoke test prod échoué — rollback automatique vers l\'ancienne image...'
+                    sh """
+                        docker rm -f ${CONTAINER_PROD} || true
+                        PREVIOUS_IMAGE=\$(docker images ${IMAGE_NAME} --format "{{.Tag}}" | sed -n '2p')
+                        if [ -n "\$PREVIOUS_IMAGE" ]; then
+                            echo "⏪ Rollback vers ${IMAGE_NAME}:\$PREVIOUS_IMAGE"
+                            docker run -d \
+                                --name ${CONTAINER_PROD} \
+                                -p ${PORT_PROD}:3000 \
+                                --restart unless-stopped \
+                                ${IMAGE_NAME}:\$PREVIOUS_IMAGE
+                        else
+                            echo "⚠️  Pas d'image précédente disponible pour le rollback"
+                        fi
+                    """
+                }
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo "✅ Déploiement continu terminé. Production disponible sur http://localhost:${PORT_PROD}"
+        }
+        failure {
+            echo '❌ Pipeline de déploiement en échec.'
+        }
+    }
+}

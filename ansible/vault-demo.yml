@@ -1,0 +1,47 @@
+---
+- name: "TP 5.5 — Ansible Vault : utilisation de secrets chiffrés"
+  hosts: local
+  become: false
+  gather_facts: false
+
+  vars_files:
+    - vars/secrets.yml
+
+  tasks:
+    - name: Confirmer que les secrets sont bien chargés
+      debug:
+        msg: "🔐 Les secrets ont été chargés depuis vars/secrets.yml (fichier chiffré par Ansible Vault)"
+
+    - name: Vérifier que app_secret_key est défini
+      assert:
+        that:
+          - app_secret_key is defined
+          - app_secret_key | length > 0
+        success_msg: "✅ app_secret_key est défini."
+        fail_msg: "❌ app_secret_key manquant dans vars/secrets.yml"
+
+    - name: Vérifier que docker_hub_token est défini
+      assert:
+        that:
+          - docker_hub_token is defined
+          - docker_hub_token | length > 0
+        success_msg: "✅ docker_hub_token est défini."
+        fail_msg: "❌ docker_hub_token manquant dans vars/secrets.yml"
+
+    - name: Afficher un résumé (sans révéler les valeurs)
+      debug:
+        msg:
+          - "📋 Secrets chargés avec succès depuis Vault."
+          - "🔑 app_secret_key    : [MASQUÉ — {{ app_secret_key | length }} caractères]"
+          - "🐳 docker_hub_token  : [MASQUÉ — {{ docker_hub_token | length }} caractères]"
+
+# ─────────────────────────────────────────────────────────────
+# Pour chiffrer ce fichier de secrets :
+#   ansible-vault encrypt vars/secrets.yml
+#
+# Pour l'éditer après chiffrement :
+#   ansible-vault edit vars/secrets.yml
+#
+# Pour exécuter le playbook avec le vault :
+#   ansible-playbook vault-demo.yml --ask-vault-pass
+# ─────────────────────────────────────────────────────────────

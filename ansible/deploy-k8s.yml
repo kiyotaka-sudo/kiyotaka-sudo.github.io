@@ -1,0 +1,72 @@
+---
+- name: "TP 5.6 — Déploiement Kubernetes via Ansible"
+  hosts: local
+  become: false
+  gather_facts: false
+
+  vars:
+    namespace: "production"
+    k8s_manifests_dir: "{{ playbook_dir }}/../k8s/tp47"
+    kubectl_bin: "kubectl"
+
+  tasks:
+    - name: Vérifier que kubectl est disponible
+      command: "{{ kubectl_bin }} version --client --short"
+      register: kubectl_check
+      changed_when: false
+
+    - name: Afficher la version kubectl
+      debug:
+        msg: "🔧 kubectl : {{ kubectl_check.stdout }}"
+
+    - name: Créer le namespace {{ namespace }} s'il n'existe pas
+      shell: >
+        {{ kubectl_bin }} get namespace {{ namespace }} 2>/dev/null
+        || {{ kubectl_bin }} create namespace {{ namespace }}
+      register: ns_result
+      changed_when: "'created' in ns_result.stdout"
+
+    - name: Résultat namespace
+      debug:
+        msg: "📁 Namespace {{ namespace }} : {{ ns_result.stdout }}"
+
+    - name: Appliquer le ConfigMap
+      command: >
+        {{ kubectl_bin }} apply -f {{ k8s_manifests_dir }}/configmap.yaml
+        -n {{ namespace }}
+      register: configmap_result
+      changed_when: "'configured' in configmap_result.stdout or 'created' in configmap_result.stdout"
+
+    - name: Appliquer le Secret
+      command: >
+        {{ kubectl_bin }} apply -f {{ k8s_manifests_dir }}/secret.yaml
+        -n {{ namespace }}
+      register: secret_result
+      changed_when: "'configured' in secret_result.stdout or 'created' in secret_result.stdout"
+
+    - name: Appliquer le Deployment du portfolio
+      command: >
+        {{ kubectl_bin }} apply -f {{ k8s_manifests_dir }}/deployment-with-config.yaml
+        -n {{ namespace }}
+      register: deploy_result
+      changed_when: "'configured' in deploy_result.stdout or 'created' in deploy_result.stdout"
+
+    - name: Attendre que le déploiement soit prêt
+      command: >
+        {{ kubectl_bin }} rollout status deployment/portfolio-deployment
+        -n {{ namespace }} --timeout=120s
+      register: rollout_status
+      changed_when: false
+
+    - name: Afficher le statut du rollout
+      debug:
+        msg: "✅ {{ rollout_status.stdout }}"
+
+    - name: Lister les pods du namespace production
+      command: "{{ kubectl_bin }} get pods -n {{ namespace }}"
+      register: pods_list
+      changed_when: false
+
+    - name: Afficher les pods
+      debug:
+        msg: "{{ pods_list.stdout_lines }}"

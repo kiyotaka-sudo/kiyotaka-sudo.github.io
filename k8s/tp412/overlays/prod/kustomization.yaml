@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+bases:
+  - ../../base
+
+namePrefix: prod-
+
+replicas:
+  - name: portfolio-deployment
+    count: 3
+
+commonLabels:
+  env: prod
+
+images:
+  - name: mbargaernest/mbarga-portfolio
+    newTag: "1.0.6"

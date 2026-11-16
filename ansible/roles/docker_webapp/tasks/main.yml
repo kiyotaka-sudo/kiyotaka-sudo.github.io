@@ -1,0 +1,38 @@
+---
+# TP 5.4 — Rôle Ansible : docker_webapp
+
+- name: Pull de l'image Docker depuis Docker Hub
+  community.docker.docker_image:
+    name: "mbargaernest/mbarga-portfolio"
+    tag: "{{ image_tag }}"
+    source: pull
+  tags:
+    - pull
+
+- name: Arrêter et supprimer le conteneur existant (si présent)
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    state: absent
+    force_kill: true
+  tags:
+    - cleanup
+
+- name: Lancer le nouveau conteneur
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "mbargaernest/mbarga-portfolio:{{ image_tag }}"
+    state: started
+    restart_policy: unless-stopped
+    ports:
+      - "{{ host_port }}:{{ container_port }}"
+  tags:
+    - deploy
+
+- name: Vérifier que le conteneur est en cours d'exécution
+  community.docker.docker_container_info:
+    name: "{{ container_name }}"
+  register: container_info
+
+- name: Afficher le statut du conteneur
+  debug:
+    msg: "✅ Conteneur {{ container_name }} — état : {{ container_info.container.State.Status }}"

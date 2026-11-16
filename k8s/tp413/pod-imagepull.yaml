@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-imagepull-error
+  labels:
+    app: imagepull-demo
+spec:
+  containers:
+    - name: fake-container
+      image: mbargaernest/fake-image:v999
+      ports:
+        - containerPort: 3000

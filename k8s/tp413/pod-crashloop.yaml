@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-crashloop
+  labels:
+    app: crashloop-demo
+spec:
+  containers:
+    - name: crashloop-container
+      image: busybox:1.36
+      command: ["sh", "-c", "echo 'Démarrage...' && exit 1"]
+  restartPolicy: Always

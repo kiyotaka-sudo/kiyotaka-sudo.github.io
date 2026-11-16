@@ -1,0 +1,7 @@
+---
+# Variables par défaut du rôle docker_webapp
+
+image_tag: "latest"
+container_name: "mbarga-portfolio"
+host_port: 3000
+container_port: 3000

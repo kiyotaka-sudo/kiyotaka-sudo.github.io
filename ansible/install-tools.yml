@@ -1,0 +1,36 @@
+---
+- name: "TP 5.2 — Vérification des outils installés"
+  hosts: local
+  become: false
+  gather_facts: true
+
+  tasks:
+    - name: Vérifier que Docker est installé
+      command: docker --version
+      register: docker_version_result
+      changed_when: false
+
+    - name: Afficher la version Docker
+      debug:
+        msg: "🐳 Docker installé : {{ docker_version_result.stdout }}"
+
+    - name: Afficher le hostname de la machine
+      debug:
+        msg: "🖥️  Hostname : {{ ansible_hostname }}"
+
+    - name: Vérifier que le service Docker est démarré
+      command: systemctl is-active docker
+      register: docker_service_status
+      changed_when: false
+      failed_when: false
+
+    - name: Afficher le statut du service Docker
+      debug:
+        msg: "⚙️  Service Docker : {{ docker_service_status.stdout }}"
+
+    - name: Confirmer que Docker est actif
+      assert:
+        that:
+          - docker_service_status.stdout == "active"
+        fail_msg: "❌ Le service Docker n'est pas actif !"
+        success_msg: "✅ Le service Docker est bien actif."

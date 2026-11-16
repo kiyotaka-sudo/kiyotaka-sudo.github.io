@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: "mbarga-ernest"
+  description: "Rôle Ansible pour déployer l'image Docker mbargaernest/mbarga-portfolio"
+  company: "Keyce Computer Science"
+  license: "MIT"
+  min_ansible_version: "2.12"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - "22.04"
+        - "24.04"
+  categories:
+    - docker
+    - deployment
+
+dependencies:
+  - role: community.docker

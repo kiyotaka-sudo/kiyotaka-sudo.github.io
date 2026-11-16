@@ -1,0 +1,43 @@
+---
+- name: "TP 5.3 — Variables, conditions et boucles"
+  hosts: local
+  become: false
+  gather_facts: true
+
+  vars:
+    app_version: "1.0.0"
+    app_name: "mbarga-portfolio"
+    packages:
+      - git
+      - curl
+      - vim
+
+  tasks:
+    - name: Afficher les informations de l'application
+      debug:
+        msg: "📦 Application : {{ app_name }} — version {{ app_version }}"
+
+    - name: Afficher chaque package de la liste
+      debug:
+        msg: "📋 Package à installer : {{ item }}"
+      loop: "{{ packages }}"
+
+    - name: "Vérifier les packages (Debian/Ubuntu uniquement)"
+      debug:
+        msg: "🐧 Système Debian détecté — les packages {{ packages | join(', ') }} seront installés via apt."
+      when: ansible_os_family == "Debian"
+
+    - name: "Message pour les autres systèmes"
+      debug:
+        msg: "⚠️  Système {{ ansible_os_family }} détecté — vérifiez le gestionnaire de packages adapté."
+      when: ansible_os_family != "Debian"
+
+    - name: Afficher les informations système via ansible_facts
+      debug:
+        msg:
+          - "🖥️  OS Family      : {{ ansible_os_family }}"
+          - "🐧 Distribution   : {{ ansible_distribution }} {{ ansible_distribution_version }}"
+          - "⚙️  Architecture   : {{ ansible_architecture }}"
+          - "🧠 CPU cores      : {{ ansible_processor_vcpus }}"
+          - "💾 RAM totale     : {{ ansible_memtotal_mb }} MB"
+          - "🌐 IP principale  : {{ ansible_default_ipv4.address | default('N/A') }}"

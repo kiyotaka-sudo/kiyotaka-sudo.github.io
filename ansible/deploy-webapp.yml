@@ -1,0 +1,14 @@
+---
+- name: "TP 5.4 — Déploiement Docker via le rôle docker_webapp"
+  hosts: localhost
+  become: false
+  gather_facts: true
+
+  vars:
+    image_tag: "latest"
+    container_name: "mbarga-portfolio"
+    host_port: 3000
+    container_port: 3000
+
+  roles:
+    - docker_webapp
