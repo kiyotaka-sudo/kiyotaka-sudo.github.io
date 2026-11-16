@@ -1,12 +1,17 @@
 // =====================================================
 // PROJET FINAL CICD — MBARGA Ernest — B3 DevOps
-// Chaîne complète : Git → Build → Test → Push → Staging → Validation → Prod → K8s
+// Chaîne : Git → Build → Test → Push → Staging → Validation → Prod → K8s
 // =====================================================
 pipeline {
     agent any
 
+    parameters {
+        string(name: 'DOCKERHUB_ID', defaultValue: 'mbargaernest', description: 'Docker Hub ID')
+        booleanParam(name: 'DEPLOY_PROD', defaultValue: true, description: 'Déployer en production après staging')
+    }
+
     environment {
-        IMAGE          = "mbargaernest/mbarga-portfolio"
+        IMAGE          = "${params.DOCKERHUB_ID}/mbarga-portfolio"
         VERSION        = "2.0.${env.BUILD_NUMBER}"
         TEST_CONTAINER = "cicd-test-${env.BUILD_NUMBER}"
         STAGING_PORT   = "8091"
@@ -92,13 +97,14 @@ pipeline {
                         $IMAGE:$VERSION
                     sleep 4
                     docker exec portfolio-staging wget -qO- http://localhost:3000/ | grep -i "Ernest" > /dev/null
-                    echo "Staging OK sur http://localhost:$STAGING_PORT (version $VERSION)"
+                    echo "Staging OK : http://localhost:$STAGING_PORT — version $VERSION"
                 '''
             }
         }
 
         // ── STAGE 5 : Validation humaine ────────────────
         stage('Validation avant prod') {
+            when { expression { return params.DEPLOY_PROD == true } }
             steps {
                 timeout(time: 15, unit: 'MINUTES') {
                     input message: "Deployer la version ${VERSION} en PRODUCTION ?",
@@ -109,6 +115,7 @@ pipeline {
 
         // ── STAGE 6 : Deploy Production ─────────────────
         stage('Deploy Production') {
+            when { expression { return params.DEPLOY_PROD == true } }
             steps {
                 script {
                     def previousImage = sh(
@@ -125,17 +132,12 @@ pipeline {
                                 ${IMAGE}:${VERSION}
                             sleep 4
                             docker exec portfolio-prod wget -qO- http://localhost:3000/ | grep -i "Ernest" > /dev/null
-                            echo "Production OK sur http://localhost:${PROD_PORT} (version ${VERSION})"
+                            echo "Production OK : http://localhost:${PROD_PORT} — version ${VERSION}"
                         """
                     } catch (err) {
                         if (previousImage != 'none') {
-                            sh """
-                                echo "ROLLBACK vers ${previousImage}"
-                                docker rm -f portfolio-prod 2>/dev/null || true
-                                docker run -d --name portfolio-prod \\
-                                    -p ${PROD_PORT}:3000 \\
-                                    ${previousImage}
-                            """
+                            sh "docker rm -f portfolio-prod 2>/dev/null; docker run -d --name portfolio-prod -p ${PROD_PORT}:3000 ${previousImage}"
+                            echo "ROLLBACK vers ${previousImage}"
                         }
                         error "Deploy prod echoue — rollback effectue"
                     }
@@ -165,10 +167,10 @@ pipeline {
             archiveArtifacts artifacts: 'reports/rapport-cicd.txt', allowEmptyArchive: true
         }
         success {
-            echo "PIPELINE CICD COMPLET — version ${VERSION} en staging, prod et Kubernetes"
+            echo "PIPELINE CICD COMPLET - version ${VERSION} en staging, prod et Kubernetes"
         }
         failure {
-            echo "PIPELINE ECHOUE — consultez la console"
+            echo "PIPELINE ECHOUE - consultez la console"
         }
     }
 }
